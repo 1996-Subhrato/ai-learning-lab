@@ -14,6 +14,7 @@ router.post('/chat', async (req, res) => {
         const { prompt } = req.body;
 
         const result = await model.generateContent(prompt);
+
         res.json({
             success: true,
             response: result.response.text()
