@@ -45,10 +45,27 @@ async function sendMessage() {
 
     loading.remove();
 
+    /* ================================= */
+    /* It will show simple text response */
+    /* ================================= */
+    // messages.innerHTML += `
+    //     <div class="message">
+    //         <div class="ai">AI</div>
+    //         <p>${data.response}</p>
+    //     </div>
+    // `;
+
+    /* ============================================== */
+    /* It will show well formatted/structure response */
+    /* ============================================== */
+    const html = marked.parse(data.response);
+
     messages.innerHTML += `
         <div class="message">
             <div class="ai">AI</div>
-            <p>${data.response}</p>
+            <div class="ai-response">
+                ${html}
+            </div>
         </div>
     `;
 

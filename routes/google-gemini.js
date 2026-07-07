@@ -1,6 +1,4 @@
 const express = require("express");
-// const { marked } = require("marked");
-// const hljs = require("highlight.js");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const router = express.Router();
@@ -20,17 +18,10 @@ router.post('/chat', async (req, res) => {
             success: true,
             response: result.response.text()
         });
-
-
-        // const markdown = result.response.text();
-        // const html = marked(markdown);
-        // res.json({
-        //     aiResponse: html
-        // });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: err.message
+            message: error.message
         });
     }
 });

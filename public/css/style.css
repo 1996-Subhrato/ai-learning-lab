@@ -83,3 +83,37 @@ button {
     border-radius: 10px;
     cursor: pointer;
 }
+.ai-response h1,
+.ai-response h2,
+.ai-response h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.ai-response p {
+    margin: 12px 0;
+    line-height: 1.7;
+}
+
+.ai-response ul,
+.ai-response ol {
+    margin-left: 25px;
+}
+
+.ai-response li {
+    margin: 6px 0;
+}
+
+.ai-response pre {
+    background: #1e1e1e;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.ai-response code {
+    background: #efefef;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
