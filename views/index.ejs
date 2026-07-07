@@ -4,35 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Integration</title>
+    <title>AI Assistant</title>
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css" />
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="bot" class="icon"></i>
+                    <span>AI Assistant</span>
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
 
-        <h1>My AI Assistant</h1>
-
-        <div id="messages"></div>
-
-        <div class="input-box">
-
-            <textarea id="prompt" placeholder="Ask anything..."></textarea>
-
-            <button id="sendBtn">
-                Send
+            <button class="new-chat-btn">
+                <i data-lucide="plus"></i>
+                New Chat
             </button>
 
-        </div>
+            <div class="history-list">
+                <div class="history-group">Today</div>
+                <div class="history-item"><i data-lucide="message-square"></i> UI Redesign</div>
+                <div class="history-item"><i data-lucide="message-square"></i> CSS Grid Layouts</div>
+                <div class="history-group">Previous 7 Days</div>
+                <div class="history-item"><i data-lucide="message-square"></i> React vs Vue</div>
+            </div>
 
+            <div class="user-profile">
+                <div class="avatar">
+                    <i data-lucide="user"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">User</div>
+                    <div class="user-plan">Pro Plan</div>
+                </div>
+                <i data-lucide="settings" class="settings-icon"></i>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="mobile-header">
+                <button id="openSidebarBtn" class="menu-btn">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="header-title">AI Assistant</div>
+                <button class="new-chat-mobile-btn">
+                    <i data-lucide="edit"></i>
+                </button>
+            </header>
+
+            <div class="chat-area">
+                <div id="messages"></div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <div class="input-box">
+                        <textarea id="prompt" rows="1" placeholder="Message AI Assistant..."></textarea>
+                        <button id="sendBtn" title="Send message">
+                            <i data-lucide="send-horizontal"></i>
+                        </button>
+                    </div>
+                    <div class="footer-text">
+                        AI can make mistakes. Check important info.
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      lucide.createIcons();
+    </script>
     <script src="/js/script.js"></script>
+    <script src="/js/ui.js"></script>
 
 </body>
 
