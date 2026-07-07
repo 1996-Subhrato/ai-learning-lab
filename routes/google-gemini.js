@@ -19,6 +19,8 @@ router.post('/chat', async (req, res) => {
             response: result.response.text()
         });
     } catch (error) {
+        console.error("Error in /google/chat route: ", error.message);
+
         res.status(500).json({
             success: false,
             message: error.message

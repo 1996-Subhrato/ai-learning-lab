@@ -69,5 +69,10 @@ async function sendMessage() {
         </div>
     `;
 
+    /* Now code blocks become beautifully highlighted */
+    document.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightElement(block);
+    });
+
     messages.scrollTop = messages.scrollHeight;
 }
