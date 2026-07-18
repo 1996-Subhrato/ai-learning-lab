@@ -212,7 +212,33 @@ function closeDeleteModal() {
     deleteModal.setAttribute("aria-hidden", "true");
 }
 
+function chatExists(chatId) {
+    return chatSessions.some(c => c.id === chatId);
+}
+
+function ensureMinimumChats() {
+    if (chatSessions.length === 0) {
+        const newChat = createChat();
+        currentChatId = newChat.id;
+        return true;
+    }
+    return false;
+}
+
+function ensureValidActiveChat() {
+    if (!currentChatId) return false;
+    
+    const exists = chatExists(currentChatId);
+    if (!exists && chatSessions.length > 0) {
+        currentChatId = chatSessions[0].id;
+        return true;
+    }
+    return false;
+}
+
 function deleteChat(chatId) {
+    if (!chatId) return false;
+    
     const index = chatSessions.findIndex(c => c.id === chatId);
     if (index === -1) return false;
     
@@ -221,29 +247,36 @@ function deleteChat(chatId) {
     
     // If we deleted the currently active chat
     if (currentChatId === chatId) {
-        if (chatSessions.length === 0) {
-            // Last chat was deleted, create a new one
-            const newChat = createChat();
-            // Update currentChatId directly to avoid calling saveChatSessions() via setCurrentChat()
-            currentChatId = newChat.id;
-        } else {
+        if (!ensureMinimumChats()) {
             // Select the next chat (which shifted into 'index'), or the previous one if we deleted the tail
             const nextIndex = Math.min(index, chatSessions.length - 1);
             currentChatId = chatSessions[nextIndex].id;
         }
+    } else {
+        // Defensive checks for external state invalidation
+        ensureMinimumChats();
+        ensureValidActiveChat();
     }
     
-    // Explicitly NOT saving to LocalStorage per PR 4.3
+    // Explicitly NOT saving to LocalStorage per PR 4.4 constraints
     return true;
 }
 
 function handleDeleteConfirm() {
-    if (currentDeleteChatId) {
-        const success = deleteChat(currentDeleteChatId);
+    const targetChatId = currentDeleteChatId;
+    if (!targetChatId) return; // Prevent rapid double-clicks
+    
+    // Clear immediately to prevent double-firing
+    currentDeleteChatId = null;
+    
+    // Validate chat still exists before attempting deletion
+    if (chatExists(targetChatId)) {
+        const success = deleteChat(targetChatId);
         if (success) {
             refreshUI();
         }
     }
+    
     closeDeleteModal();
 }
 

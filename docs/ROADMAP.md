@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v4.3.0 - Phase 4: Delete Edge Cases
 * [x] v4.2.0 - Phase 4: Delete State
 * [x] v4.1.0 - Phase 4: Delete Confirmation Modal
 * [x] v4.0.0 - Phase 4: Delete Chat UI

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.3.0] - 2026-07-18
+### Added
+- **Defensive State Management:** Introduced new state-validation layers (`ensureMinimumChats`, `ensureValidActiveChat`) that run automatically during deletions to guarantee the application UI never breaks.
+### Fixed
+- **Double-Delete Bug:** Fixed a race condition where rapidly clicking the delete confirmation button could trigger duplicate delete operations.
+- **Stale References:** The delete modal now gracefully ignores attempts to delete chats that have already been removed.
+
+
 ## [v4.2.0] - 2026-07-18
 ### Added
 - **In-Memory Deletion:** The Delete Confirmation Modal now successfully removes chats from the active application session.

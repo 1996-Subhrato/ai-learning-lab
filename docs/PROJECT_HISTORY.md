@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v4.3.0
+**Date:** 2026-07-18
+**Feature Name:** Delete Edge Cases (PR 4.4)
+**Objective:** Harden the chat deletion workflow by introducing robust defensive programming techniques to prevent invalid states, rapid-click bugs, and unexpected external mutations.
+**Problem Statement:** The initial in-memory delete logic functioned well in the "happy path" but was vulnerable to edge cases. For instance, double-clicking the confirmation button could trigger back-to-back splice operations, or a delayed deletion could target a chat that no longer exists, throwing an exception or leaving the application in a permanently broken state.
+**What Was Implemented:**
+* Decoupled validation logic into dedicated helper functions: `chatExists()`, `ensureMinimumChats()`, and `ensureValidActiveChat()`.
+* Upgraded `deleteChat()` to utilize these helpers, guaranteeing the application always enforces a valid minimum state (at least one chat exists, and the active chat pointer is valid) even if external logic mutates the list unexpectedly.
+* Patched `handleDeleteConfirm()` to cache the target ID locally and instantly nullify the global `currentDeleteChatId` pointer. This entirely neutralizes double-click race conditions.
+* Added a pre-flight `chatExists()` check before allowing a deletion to proceed, cleanly handling stale requests by quietly closing the modal instead of throwing an error.
+**Internal Working:** The logic evaluates the application constraints (`length > 0` and `exists(active)`) *after* any deletion (or failed deletion), shifting the codebase from imperative step-by-step state management to a more declarative "ensure valid state" model.
+**Architecture Decisions:** Adopted the "guard clause" defensive programming pattern. By validating the state at the beginning and end of operations, we remove the need for deeply nested `if/else` checks, flattening the logic and making it significantly easier to read.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Handling rapid-clicks without introducing complex debouncing logic.
+**Solutions:** Instantly clearing the state pointer (`currentDeleteChatId = null`) effectively acts as a synchronous lock, ignoring any subsequent clicks that arrive before the UI updates.
+**Lessons Learned:** UI events are not inherently synchronous with user perception. Users can easily fire two click events before a modal begins its closing animation. Immediate, synchronous state nullification is the most resilient way to prevent duplicate operations on destructive workflows.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement actual LocalStorage persistence.
+
+---
+
 ### Version v4.2.0
 **Date:** 2026-07-18
 **Feature Name:** Delete State (PR 4.3)

@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v4.3.0: Delete Edge Cases
+Learned:
+* **UI Race Conditions:** A modal's closing animation takes time. During that window, a user can fire multiple events (like double-clicking a "Confirm" button). The best defense is synchronous state invalidation—immediately nullifying the target pointer (`targetId = null`) before executing the logic completely neutralizes the threat of duplicate processing.
+* **Declarative Guards:** Replacing imperative logic ("if X then do Y, else if Z do A") with declarative guard functions (`ensureValidState()`) dramatically simplifies complex state management and reduces regressions.
+
 ## v4.2.0: Delete State
 Learned:
 * **State Fallback Mechanics:** When deleting entities that govern the primary viewport (like an active chat), array splicing is only half the problem. Calculating the `nextIndex` using `Math.min(index, length - 1)` is an elegant way to handle selection handoffs without complex conditional branching.
