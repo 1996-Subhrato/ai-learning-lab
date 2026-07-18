@@ -2,6 +2,29 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v7.2.0
+**Date:** 2026-07-18
+**Feature Name:** Create Database Tables (PR 3.3)
+**Objective:** Design and instantiate the PostgreSQL database schema for the AI Chat application to prepare for API integration.
+**Problem Statement:** After establishing a reusable database layer, the database itself was completely empty. We required a normalized schema capable of durably storing hierarchical chat history.
+**What Was Implemented:**
+* **Schema Definition:** Authored `database/schema.sql` containing idempotent `CREATE TABLE IF NOT EXISTS` statements.
+* **Tables Created:** Created `chats` (tracking conversation metadata) and `messages` (tracking individual role/content nodes).
+* **Constraints:** Enforced UUID generation (`gen_random_uuid()`) via `pgcrypto`, timestamp defaulting (`NOW()`), strict `NOT NULL` validations, and a `CHECK` constraint restricting the `role` column to `user`, `assistant`, or `system`.
+* **Relationships:** Bound `messages.chat_id` to `chats.id` using `ON DELETE CASCADE` so deleting a conversation cleanly wipes its history without manual query orchestration.
+* **Performance:** Preemptively created indexes on `messages(chat_id)` and `messages(created_at)`.
+**Internal Working:** Executed the schema directly against the Supabase database. The SQL relies entirely on native PostgreSQL features without requiring external ORM abstractions.
+**Architecture Decisions:** Adopted an idempotent SQL schema design. All creation commands use `IF NOT EXISTS`, allowing the script to be run repeatedly without causing destructive side effects (like dropping existing data).
+**Libraries Used:** PostgreSQL (SQL dialect).
+**Folder/File Changes:** Created `database/schema.sql`.
+**Challenges Faced:** None.
+**Solutions:** N/A.
+**Lessons Learned:** Defining cascading relationships at the database layer drastically simplifies application-layer deletion logic, pushing referential integrity guarantees down to the storage engine where they belong.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement Data Repositories for backend CRUD operations.
+
+---
+
 ### Version v7.1.0
 **Date:** 2026-07-18
 **Feature Name:** Database Layer Abstraction (PR 3.2)
