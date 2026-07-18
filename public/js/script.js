@@ -123,8 +123,27 @@ function closeRenameModal() {
     renameInput.value = "";
 }
 
+function renameChat(chatId, newTitle) {
+    if (!newTitle || newTitle.trim() === "") return false;
+    
+    const chat = chatSessions.find(c => c.id === chatId);
+    if (chat) {
+        chat.title = newTitle.trim();
+        chat.updatedAt = new Date();
+        // Explicitly NOT saving to LocalStorage per PR 3.3
+        return true;
+    }
+    return false;
+}
+
 function handleRenameSave() {
-    console.log("Rename not implemented yet");
+    const newTitle = renameInput.value;
+    if (currentRenameChatId) {
+        const success = renameChat(currentRenameChatId, newTitle);
+        if (success) {
+            renderSidebar();
+        }
+    }
     closeRenameModal();
 }
 

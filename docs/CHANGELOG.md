@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.2.0] - 2026-07-18
+### Added
+- **In-Memory Renaming:** The Rename Modal now fully updates the chat session title in active memory.
+- **Optimistic UI:** The sidebar instantly updates to display the new chat title upon saving.
+- **Validation:** Added basic validation to prevent renaming chats to empty strings or pure whitespace.
+
+
 ## [v3.1.0] - 2026-07-18
 ### Added
 - **Rename Modal:** Replaced the native browser prompt with a custom, accessible DOM modal for renaming chats.

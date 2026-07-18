@@ -2,6 +2,27 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v3.2.0
+**Date:** 2026-07-18
+**Feature Name:** Rename State (PR 3.3)
+**Objective:** Connect the Rename Modal UI to the application's internal memory state so that chats can be renamed interactively, without yet committing the changes to long-term storage.
+**Problem Statement:** Users could open the modal and type, but clicking 'Save' did nothing. The application needed a dedicated state modifier to update the chat session title in memory and immediately reflect that change in the sidebar.
+**What Was Implemented:**
+* Built a `renameChat(chatId, newTitle)` helper in `script.js` to handle the pure state mutation. It includes basic validation (trimming whitespace and rejecting empty strings).
+* Hooked up `handleRenameSave()` to read the modal input, fire the state update, and immediately call `renderSidebar()` to synchronize the UI.
+* Explicitly omitted `saveChatSessions()` to maintain strict PR scoping, meaning renames exist only in volatile memory for now.
+**Internal Working:** When the user clicks Save (or hits Enter), the system searches the `chatSessions` array for the matching ID, mutates its `.title` property, updates its `.updatedAt` timestamp, and re-renders the DOM list. The modal is then closed.
+**Architecture Decisions:** Adopted an optimistic UI rendering pattern where the DOM updates instantly upon state mutation. Persistence is deferred to the next architectural slice.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** None, standard state management pattern.
+**Solutions:** N/A.
+**Lessons Learned:** Decoupling state mutation from state persistence allows features to be built and tested in completely isolated architectural slices, guaranteeing that the memory model works perfectly before disk I/O complicates debugging.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement the final persistence layer to permanently save the renamed titles to LocalStorage.
+
+---
+
 ### Version v3.1.0
 **Date:** 2026-07-18
 **Feature Name:** Rename Modal (PR 3.2)

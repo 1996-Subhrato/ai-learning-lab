@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v3.2.0: Rename State
+Learned:
+* **Decoupled Architecture:** Implementing state mutations purely in memory before wiring up the persistence layer is a highly effective way to isolate DOM synchronization bugs from asynchronous storage bugs.
+
 ## v3.1.0: Rename Modal
 Learned:
 * **Vanilla JS Modals:** Building an accessible modal from scratch requires deliberate handling of overlay click events and global keyboard events (like `Escape`) to match user expectations established by native `<dialog>` elements or heavy UI libraries.
