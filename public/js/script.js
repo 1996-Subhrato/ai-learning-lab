@@ -212,8 +212,38 @@ function closeDeleteModal() {
     deleteModal.setAttribute("aria-hidden", "true");
 }
 
+function deleteChat(chatId) {
+    const index = chatSessions.findIndex(c => c.id === chatId);
+    if (index === -1) return false;
+    
+    // Remove the chat from the array
+    chatSessions.splice(index, 1);
+    
+    // If we deleted the currently active chat
+    if (currentChatId === chatId) {
+        if (chatSessions.length === 0) {
+            // Last chat was deleted, create a new one
+            const newChat = createChat();
+            // Update currentChatId directly to avoid calling saveChatSessions() via setCurrentChat()
+            currentChatId = newChat.id;
+        } else {
+            // Select the next chat (which shifted into 'index'), or the previous one if we deleted the tail
+            const nextIndex = Math.min(index, chatSessions.length - 1);
+            currentChatId = chatSessions[nextIndex].id;
+        }
+    }
+    
+    // Explicitly NOT saving to LocalStorage per PR 4.3
+    return true;
+}
+
 function handleDeleteConfirm() {
-    console.log("Delete not implemented yet for chat ID:", currentDeleteChatId);
+    if (currentDeleteChatId) {
+        const success = deleteChat(currentDeleteChatId);
+        if (success) {
+            refreshUI();
+        }
+    }
     closeDeleteModal();
 }
 

@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v4.2.0: Delete State
+Learned:
+* **State Fallback Mechanics:** When deleting entities that govern the primary viewport (like an active chat), array splicing is only half the problem. Calculating the `nextIndex` using `Math.min(index, length - 1)` is an elegant way to handle selection handoffs without complex conditional branching.
+
 ## v4.1.0: Delete Confirmation Modal
 Learned:
 * **Destructive UX:** A well-designed destructive confirmation modal must do two things: use alarming colors (solid red) to break the user's automated clicking patterns, and explicitly state *what* is being deleted (by injecting the chat title into the DOM) so the user doesn't accidentally delete the wrong item.

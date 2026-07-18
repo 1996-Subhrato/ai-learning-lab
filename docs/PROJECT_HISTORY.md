@@ -2,6 +2,29 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v4.2.0
+**Date:** 2026-07-18
+**Feature Name:** Delete State (PR 4.3)
+**Objective:** Connect the Delete Confirmation Modal to the application's internal memory state so that chats can be deleted and the active chat seamlessly transitions, without yet committing to LocalStorage.
+**Problem Statement:** Deleting a chat is not just about removing an object from an array; it's about handling what happens to the user's viewport. If the active chat is deleted, the app cannot be left in an undefined state. We need smart fallback logic to automatically select adjacent chats or generate a fresh one if the workspace is emptied.
+**What Was Implemented:**
+* Built `deleteChat(chatId)` in `script.js` to handle splicing the target chat out of the `chatSessions` array.
+* Engineered active-chat fallback logic: if the currently active chat is deleted, the system intelligently selects the next available adjacent chat (or the previous one if the tail was deleted).
+* Implemented a safeguard so that if the last remaining chat is deleted, a brand new chat is immediately instantiated to ensure the application is never empty.
+* Hooked up `handleDeleteConfirm()` to invoke the deletion and fire `refreshUI()` to instantly synchronize both the sidebar and conversation rendering areas.
+* Explicitly mutated `currentChatId` manually instead of using `setCurrentChat()` to guarantee no accidental `LocalStorage` writes occurred during this PR phase.
+**Internal Working:** When confirmation is received, `Array.prototype.findIndex()` locates the item, and `.splice()` removes it. Active chat index tracking (`Math.min`) ensures smooth selection handoffs.
+**Architecture Decisions:** Adopted a defensive "always valid state" pattern. The application state is guaranteed to always have at least one valid chat and one valid active selection pointer immediately after deletion.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Ensuring `saveChatSessions()` was not accidentally invoked via internal helper dependencies like `setCurrentChat()`.
+**Solutions:** Updated the active state tracking variables directly to maintain pure volatile memory state execution.
+**Lessons Learned:** State transitions around deletion are often the most fragile part of client-side apps. Directly manipulating state pointers (rather than relying on high-level setters that might trigger I/O side effects) is sometimes necessary to enforce strict layer isolation during feature development.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement the final LocalStorage persistence layer to permanently commit deletions to disk.
+
+---
+
 ### Version v4.1.0
 **Date:** 2026-07-18
 **Feature Name:** Delete Confirmation Modal (PR 4.2)
