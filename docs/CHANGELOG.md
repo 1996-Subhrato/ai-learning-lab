@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v5.0.0] - 2026-07-18
+### Added
+- **Search UI:** Added a sleek, fully responsive search bar to the sidebar for finding past chats.
+- **Search Affordances:** The search input includes a dynamic "clear" button (×) that appears only when text is entered, providing quick resets.
+- **Focus States:** Implemented modern, accessible focus rings around the search input using the application's primary accent color.
+
+
 ## [v4.3.0] - 2026-07-18
 ### Added
 - **Defensive State Management:** Introduced new state-validation layers (`ensureMinimumChats`, `ensureValidActiveChat`) that run automatically during deletions to guarantee the application UI never breaks.

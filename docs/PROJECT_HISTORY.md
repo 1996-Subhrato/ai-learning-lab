@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v5.0.0
+**Date:** 2026-07-18
+**Feature Name:** Search UI (PR 5.1)
+**Objective:** Introduce a dedicated search bar into the sidebar to establish the visual and interactive layout for upcoming chat filtering capabilities.
+**Problem Statement:** As chat history grows, finding specific conversations becomes tedious. Before implementing full text-search algorithms, the UI layer must be securely integrated into the sidebar without causing layout shifts or displacing existing controls.
+**What Was Implemented:**
+* Added a new `.sidebar-search` container in `index.ejs`, nestled cleanly between the header and the "New Chat" button.
+* Designed a responsive, accessible search input featuring a `search` icon for clear affordance and a `clear` (×) button for quick resetting.
+* Added modern focus states in `style.css` matching the application's overall accent color and shadow tokens (`box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.2)`).
+* Hooked up lightweight JS logic in `script.js` to conditionally toggle the visibility of the clear button based on input length, maintaining a clean UI when empty.
+**Internal Working:** The clear button dynamically switches between `display: none` and `display: flex` via an `input` event listener, and immediately re-focuses the input when clicked.
+**Architecture Decisions:** Isolated the Search UI completely from the application's state rendering pipeline. It currently acts purely as a dumb visual component, ensuring no regressions in the existing chat list behavior.
+**Libraries Used:** Lucide (icons), Vanilla JS, CSS.
+**Folder/File Changes:** Modified `views/index.ejs`, `public/css/style.css`, and `public/js/script.js`.
+**Challenges Faced:** Positioning the icons flawlessly inside the input box without overlapping user text.
+**Solutions:** Utilized CSS `position: relative` on the container with absolute positioning for the icons, coupled with explicit left/right padding on the `input` field.
+**Lessons Learned:** Building UI independently from complex filtering logic drastically simplifies testing. We can perfect the responsive layout and micro-interactions (like the clear button) before touching the heavy state-management code.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement actual filtering logic to dynamically hide non-matching chats.
+
+---
+
 ### Version v4.3.0
 **Date:** 2026-07-18
 **Feature Name:** Delete Edge Cases (PR 4.4)

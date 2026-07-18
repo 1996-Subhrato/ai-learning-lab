@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v5.0.0: Search UI
+Learned:
+* **Input Icon Layouts:** Wrapping an `<input>` in a `relative` container and using `absolute` positioning for icons (with compensatory padding on the input itself) is the most robust way to build custom search bars without relying on brittle background-image hacks.
+
 ## v4.3.0: Delete Edge Cases
 Learned:
 * **UI Race Conditions:** A modal's closing animation takes time. During that window, a user can fire multiple events (like double-clicking a "Confirm" button). The best defense is synchronous state invalidation—immediately nullifying the target pointer (`targetId = null`) before executing the logic completely neutralizes the threat of duplicate processing.

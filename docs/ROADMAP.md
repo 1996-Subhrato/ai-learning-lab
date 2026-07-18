@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v5.0.0 - Phase 5: Search UI
 * [x] v4.3.0 - Phase 4: Delete Edge Cases
 * [x] v4.2.0 - Phase 4: Delete State
 * [x] v4.1.0 - Phase 4: Delete Confirmation Modal

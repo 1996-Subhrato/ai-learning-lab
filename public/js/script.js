@@ -13,6 +13,9 @@ const deleteModalChatTitle = document.getElementById("deleteModalChatTitle");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
+const chatSearchInput = document.getElementById("chatSearchInput");
+const clearSearchBtn = document.getElementById("clearSearchBtn");
+
 const chatSessions = [];
 let currentChatId = null;
 
@@ -279,6 +282,22 @@ function handleDeleteConfirm() {
     
     closeDeleteModal();
 }
+
+// --- Search UI Logic ---
+
+chatSearchInput.addEventListener("input", () => {
+    if (chatSearchInput.value.length > 0) {
+        clearSearchBtn.style.display = "flex";
+    } else {
+        clearSearchBtn.style.display = "none";
+    }
+});
+
+clearSearchBtn.addEventListener("click", () => {
+    chatSearchInput.value = "";
+    clearSearchBtn.style.display = "none";
+    chatSearchInput.focus();
+});
 
 cancelDeleteBtn.addEventListener("click", closeDeleteModal);
 confirmDeleteBtn.addEventListener("click", handleDeleteConfirm);
