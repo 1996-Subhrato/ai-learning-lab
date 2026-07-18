@@ -2,6 +2,27 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v2.3.0
+**Date:** 2026-07-18
+**Feature Name:** Storage Versioning & Safe Recovery (LocalStorage Persistence PR 2.4)
+**Objective:** Make the LocalStorage schema future-proof by introducing versioning and ensuring the application gracefully recovers from corrupted or outdated storage payloads.
+**Problem Statement:** If the structure of the application's storage schema ever changes in the future, attempting to load an older payload would crash the application or result in undefined behavior. Additionally, corrupted JSON data would silently fail and potentially leave the application in a permanently broken state.
+**What Was Implemented:**
+* Introduced a constant `STORAGE_VERSION = 1` which is now stamped into the JSON payload every time the application saves.
+* Re-wrote the `restoreChatSessions()` parser to strictly validate the version parameter during boot.
+* Added destructive recovery fallback logic. If `restoreChatSessions()` detects an unsupported version, an empty array, or throws a parsing exception (corrupted data), it actively calls `clearStoredChats()` to wipe the toxic entry from the browser and forces the application to cleanly reboot as a fresh instance.
+**Internal Working:** During initialization, the restore pipeline extracts the payload. If `data.version !== STORAGE_VERSION`, it considers the payload poisoned, wipes it, and returns `false`. The caller (`initializeChatSession`) receives the `false` signal and natively provisions a new chat, hiding the background failure from the user entirely.
+**Architecture Decisions:** Adopted a "Nuke and Pave" recovery strategy rather than attempting complex fallback migrations, as this PR lays the foundation for future migrations but explicitly delays writing the transformation layers until an actual schema change necessitates them.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Safely clearing invalid state without getting trapped in error loops.
+**Solutions:** Consolidated all validation checks and generic exceptions under unified exit branches that consistently wipe the entry before returning.
+**Lessons Learned:** Defensive programming at the persistence boundary is crucial. Trusting `localStorage` data inherently assumes the user hasn't tampered with it, which is an unsafe assumption in browser environments.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Cloud persistence (MongoDB).
+
+---
+
 ### Version v2.2.0
 **Date:** 2026-07-18
 **Feature Name:** Persist Current Chat (LocalStorage Persistence PR 2.3)

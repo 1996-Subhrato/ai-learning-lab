@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.3.0] - 2026-07-18
+### Added
+- Introduced explicit storage versioning (`STORAGE_VERSION = 1`) to prepare for future schema migrations.
+### Fixed
+- Improved application stability by gracefully clearing corrupted, empty, or outdated local storage payloads upon detection, automatically bootstrapping the user back into a healthy state without throwing fatal exceptions.
+
+
 ## [v2.2.0] - 2026-07-18
 ### Fixed
 - Fixed an edge case where the startup initialization block would detect and repair a corrupted `currentChatId` but fail to save the repaired value back to LocalStorage.

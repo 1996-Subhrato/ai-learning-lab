@@ -6,10 +6,12 @@ const chatSessions = [];
 let currentChatId = null;
 
 const STORAGE_KEY = "ai-chat-app";
+const STORAGE_VERSION = 1;
 
 function saveChatSessions() {
     try {
         const data = {
+            version: STORAGE_VERSION,
             chatSessions,
             currentChatId
         };
@@ -24,7 +26,13 @@ function restoreChatSessions() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
             const data = JSON.parse(stored);
-            if (data && Array.isArray(data.chatSessions) && data.chatSessions.length > 0) {
+            
+            if (!data || data.version !== STORAGE_VERSION) {
+                clearStoredChats();
+                return false;
+            }
+            
+            if (Array.isArray(data.chatSessions) && data.chatSessions.length > 0) {
                 chatSessions.length = 0;
                 data.chatSessions.forEach(chat => {
                     chat.createdAt = new Date(chat.createdAt);
@@ -41,10 +49,14 @@ function restoreChatSessions() {
                 }
                 
                 return true;
+            } else {
+                clearStoredChats();
+                return false;
             }
         }
     } catch (e) {
         console.error("Failed to restore chat sessions:", e);
+        clearStoredChats();
     }
     return false;
 }

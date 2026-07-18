@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v2.3.0: Storage Versioning & Safe Recovery
+Learned:
+* **Defensive Persistence Pipelines:** In client-side storage architectures, the application cannot trust that the payload it writes is the payload it will read on the next boot (due to browser extensions, user tampering, or legacy caches). Always treat storage hydration as an untrusted external API integration, employing strict versioning, structural validation, and destructive recovery mechanisms.
+
 ## v2.2.0: Persist Current Chat
 Learned:
 * **Bidirectional Bootstrapping:** When an application detects corrupted or missing references during initialization (like a missing foreign key mapping), simply mapping the user to a fallback state in memory isn't enough. The application must flush that fallback state back to the persistence layer to permanently cleanse the corruption.
