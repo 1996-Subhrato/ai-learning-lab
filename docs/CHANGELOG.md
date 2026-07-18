@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.9.1] - 2026-07-18
+### Changed
+- Replaced insecure `Date.now()` chat ID generation with standard `crypto.randomUUID()`.
+- Eliminated all direct state mutations from business logic by introducing the `rollbackLastMessage()` helper.
+- Decoupled session initialization into `createChatObject()` and `initializeChatSession()` for strict separation of concerns.
+
+
+## [v0.9.0] - 2026-07-18
+### Added
+- In-memory `chatSessions` architecture utilizing encapsulated helper methods (`addMessage`, `createChat`, `setCurrentChat`).
+
+### Changed
+- Replaced the global `conversationHistory` array with a dynamic session-based data model.
+- Application automatically provisions a default "New Chat" session on startup.
+
+
 ## [v0.8.2] - 2026-07-18
 ### Changed
 - Refactored the loading ("Thinking...") UI into a reusable `createLoadingMessage()` helper using pure DOM APIs.

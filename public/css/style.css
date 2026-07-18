@@ -590,6 +590,38 @@ textarea::placeholder {
     transform: scale(0.95);
 }
 
+#stopBtn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+}
+
+#stopBtn i {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+}
+
+#stopBtn:hover {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+#stopBtn:active {
+    transform: scale(0.95);
+}
+
 .footer-text {
     margin-top: 12px;
     font-size: 0.75rem;

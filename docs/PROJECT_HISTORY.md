@@ -2,6 +2,50 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v0.9.1
+**Date:** 2026-07-18
+**Feature Name:** Chat Sessions Architecture Refactor
+**Objective:** Solidify the internal session architecture by strictly enforcing the Single Responsibility Principle and removing all direct state mutations from business logic.
+**Problem Statement:** While `v0.9.0` introduced the foundation for chat sessions, business logic within `sendMessage` was still mutating the message array directly via `.pop()` on error rollbacks, and object construction was coupled to state registration.
+**What Was Implemented:**
+* Extracted message removal into a strict `rollbackLastMessage()` helper, ensuring the `updatedAt` timestamp is bumped even upon deletion.
+* Decoupled object generation into a pure `createChatObject()` factory function, leaning on `crypto.randomUUID()` for collision-proof database-ready IDs.
+* Moved startup logic into a dedicated `initializeChatSession()` orchestrator.
+**Internal Working:** Business logic (the UI controllers and fetch wrappers) now possesses absolutely zero knowledge of how the `chatSessions` array or internal message arrays function. All data flow, both reading and writing, is routed through isolated helper functions.
+**Architecture Decisions:** Enforced a rigid "No Direct State Mutation" policy. This guarantees that when LocalStorage or MongoDB is introduced in the future, developers will only need to modify the helper functions rather than auditing the entire application for rogue `.push()` or `.pop()` calls.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** N/A (Standard refactoring).
+**Solutions:** N/A.
+**Lessons Learned:** The `crypto.randomUUID()` Web API provides an instant, native way to generate V4 UUIDs without external dependencies like `uuid`, perfect for assigning primary keys before pushing to a database.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Functional sidebar and Chat Switching.
+
+---
+
+### Version v0.9.0
+**Date:** 2026-07-18
+**Feature Name:** Chat Sessions Architecture (Step 1)
+**Objective:** Replace the single-array conversation model with a scalable in-memory session architecture to support multiple concurrent chats in the future.
+**Problem Statement:** The application historically hardcoded all messages into a single global `conversationHistory` array, completely preventing the ability to switch conversations or store multiple disjointed chat threads.
+**What Was Implemented:**
+* Introduced a centralized `chatSessions` array to hold robust chat objects (`id`, `title`, `createdAt`, `updatedAt`, `messages`).
+* Created a tracking variable `currentChatId` to monitor the active context.
+* Established strict helper functions (`createChat()`, `setCurrentChat()`, `getCurrentMessages()`, `addMessage()`) to encapsulate all message mutations.
+* Hardwired the initialization to automatically spawn and select a "New Chat" on page load.
+* Swept the existing `sendMessage` logic to swap direct array manipulations with the new API boundaries.
+**Internal Working:** Instead of pushing strings blindly to a list, the application now requests the active `messages` array from the `getCurrentMessages()` helper. The `addMessage()` helper handles appending objects while automatically bumping the `updatedAt` timestamp of the parent chat session.
+**Architecture Decisions:** Adopted the Single Responsibility Principle for state management. This prepares the exact schema that a future MongoDB integration will require, minimizing future migration friction.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Transitioning legacy direct-array operations (`.pop()`, `.filter()`) safely behind getter functions without breaking existing AbortError rollbacks.
+**Solutions:** Designed `getCurrentMessages()` to return a direct reference to the active array, permitting safe local operations while forbidding structural reassignment.
+**Lessons Learned:** Centralized state managers (even simple helper functions) dramatically improve application scalability compared to global mutable arrays.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Functional sidebar chat switching and UI integration.
+
+---
+
 ### Version v0.8.2
 **Date:** 2026-07-18
 **Feature Name:** Loading UI & Conversation Architecture Refactor

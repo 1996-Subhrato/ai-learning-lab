@@ -2,6 +2,15 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v0.9.1: Chat Sessions Architecture Refactor
+Learned:
+* **UUIDs:** `crypto.randomUUID()` is a globally available Web API in modern browsers (and Node.js). It is vastly superior to `Date.now()` or `Math.random()` for generating unique, collision-proof database keys for objects.
+* **Strict State Management:** Banning native array methods (`.push`, `.pop`) inside business logic in favor of domain-specific helpers (`addMessage`, `rollbackLastMessage`) guarantees that crucial side-effects (like bumping `updatedAt` timestamps or syncing to a DB) are never accidentally bypassed.
+
+## v0.9.0: Chat Sessions Architecture (Step 1)
+Learned:
+* **State Encapsulation:** Replacing global arrays with getter/setter helpers (`getCurrentMessages`, `addMessage`) enforces a strict API contract across the frontend. This makes future integrations (like syncing state to MongoDB or LocalStorage) vastly simpler, as there is only one "choke point" where data is mutated.
+
 ## v0.8.2: Loading UI & Conversation Architecture
 Learned:
 * **Visual vs. Contextual History:** The conversation history displayed to a user does not have to perfectly mirror the payload sent to an AI. Interrupted, partial assistant responses should remain visible on screen for UX purposes, but must be explicitly excluded from future LLM payloads to prevent contextual drift and hallucination caused by trailing, incomplete sentences.

@@ -2,7 +2,64 @@ const btn = document.getElementById("sendBtn");
 const prompt = document.getElementById("prompt");
 const messages = document.getElementById("messages");
 
-const conversationHistory = [];
+const chatSessions = [];
+let currentChatId = null;
+
+function createChatObject() {
+    return {
+        id: `chat-${crypto.randomUUID()}`,
+        title: "New Chat",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        messages: []
+    };
+}
+
+function createChat() {
+    const chat = createChatObject();
+    chatSessions.push(chat);
+    return chat;
+}
+
+function setCurrentChat(chatId) {
+    const exists = chatSessions.some(c => c.id === chatId);
+    if (exists) {
+        currentChatId = chatId;
+    }
+}
+
+function getCurrentChat() {
+    return chatSessions.find(c => c.id === currentChatId) || null;
+}
+
+function getCurrentMessages() {
+    const chat = getCurrentChat();
+    return chat ? chat.messages : [];
+}
+
+function addMessage(message) {
+    const chat = getCurrentChat();
+    if (chat) {
+        chat.messages.push(message);
+        chat.updatedAt = new Date();
+    }
+}
+
+function rollbackLastMessage() {
+    const chat = getCurrentChat();
+    if (chat && chat.messages.length > 0) {
+        chat.messages.pop();
+        chat.updatedAt = new Date();
+    }
+}
+
+function initializeChatSession() {
+    const initialChat = createChat();
+    setCurrentChat(initialChat.id);
+}
+
+// Automatically create first chat on load
+initializeChatSession();
 let currentController = null;
 
 // Initialize global Stop button
@@ -75,7 +132,7 @@ async function sendMessage() {
 
     currentController = new AbortController();
 
-    conversationHistory.push({
+    addMessage({
         role: "user",
         content: text
     });
@@ -100,7 +157,7 @@ async function sendMessage() {
     const loading = createLoadingMessage();
     messages.scrollTop = messages.scrollHeight;
 
-    const payloadMessages = conversationHistory.filter(msg => msg.role === 'user' || msg.complete);
+    const payloadMessages = getCurrentMessages().filter(msg => msg.role === 'user' || msg.complete);
 
     try {
         const response = await fetch("/google/chat", {
@@ -172,7 +229,7 @@ async function sendMessage() {
         }
 
         if (accumulatedText) {
-            conversationHistory.push({
+            addMessage({
                 role: "assistant",
                 content: accumulatedText,
                 complete: true
@@ -184,7 +241,7 @@ async function sendMessage() {
             if (loading.parentNode) loading.remove();
             
             if (accumulatedText) {
-                conversationHistory.push({
+                addMessage({
                     role: "assistant",
                     content: accumulatedText,
                     complete: false
@@ -196,7 +253,7 @@ async function sendMessage() {
             console.error("Streaming error:", error);
             if (loading.parentNode) loading.remove();
             
-            conversationHistory.pop(); // Rollback user message
+            rollbackLastMessage(); // Rollback user message
             
             const errorResponseDiv = createAiMessage();
             errorResponseDiv.className = "ai-response ai-error";
