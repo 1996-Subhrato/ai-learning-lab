@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v2.4.0: Storage Helper Refactor & Write Optimization
+Learned:
+* **Mutation Chaining vs. I/O Churn:** Centralizing state changes (e.g. every helper automatically saves) is excellent for consistency, but creates redundant I/O churn when multiple helpers are invoked synchronously in a chain (e.g., `createChat()` -> `setCurrentChat()`). Optimizing this requires deferring the I/O commitment to the final step of the chain.
+
 ## v2.3.0: Storage Versioning & Safe Recovery
 Learned:
 * **Defensive Persistence Pipelines:** In client-side storage architectures, the application cannot trust that the payload it writes is the payload it will read on the next boot (due to browser extensions, user tampering, or legacy caches). Always treat storage hydration as an untrusted external API integration, employing strict versioning, structural validation, and destructive recovery mechanisms.

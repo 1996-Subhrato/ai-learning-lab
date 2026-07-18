@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.4.0] - 2026-07-18
+### Changed
+- **Performance Optimization:** Refactored state-mutation chains to prevent double-writes to `LocalStorage` during chat creation and initialization.
+- **Performance Optimization:** Added an early return guard clause to active chat selection to prevent useless disk writes if the user clicks the currently active chat.
+
+
 ## [v2.3.0] - 2026-07-18
 ### Added
 - Introduced explicit storage versioning (`STORAGE_VERSION = 1`) to prepare for future schema migrations.

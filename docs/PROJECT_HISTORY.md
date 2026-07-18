@@ -2,6 +2,27 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v2.4.0
+**Date:** 2026-07-18
+**Feature Name:** Storage Helper Refactor & Write Optimization (LocalStorage Persistence PR 2.5)
+**Objective:** Clean up the internal persistence architecture to eliminate redundant disk writes and strictly enforce the separation of concerns.
+**Problem Statement:** Certain UI flows naturally executed sequential state mutations (e.g. creating a chat array entry *then* instantly setting it as the active chat). Because both `createChat` and `setCurrentChat` called `saveChatSessions()`, this resulted in double-writes to LocalStorage for a single logical user interaction. 
+**What Was Implemented:**
+* Removed the automatic `saveChatSessions()` call from `createChat()`. Since this factory method is purely internal and always functionally chained into `setCurrentChat()`, it defers the disk write to the latter.
+* Added a guard clause `if (currentChatId === chatId) return;` to `setCurrentChat()` to silently exit if the user clicks the currently active chat, preventing a useless save cycle.
+* Added visual namespace groupings (`// --- Storage Layer ---`, `// --- Application State Helpers ---`) to `script.js` to clearly delineate responsibility boundaries.
+**Internal Working:** The application remains perfectly synchronized but now performs 50% fewer I/O operations when bootstrapping or creating new chats.
+**Architecture Decisions:** Adopted a "Commit at the end of the chain" pattern for synchronous mutations to maximize performance without sacrificing durability.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** None, the centralized state pattern made locating redundant writes very straightforward.
+**Solutions:** A combination of removing one function call and adding one early return.
+**Lessons Learned:** Just because state mutations are centralized doesn't mean they are fully optimized; chained synchronous mutations can easily cause redundant I/O churn if every mutation natively saves itself.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Cloud persistence (MongoDB).
+
+---
+
 ### Version v2.3.0
 **Date:** 2026-07-18
 **Feature Name:** Storage Versioning & Safe Recovery (LocalStorage Persistence PR 2.4)

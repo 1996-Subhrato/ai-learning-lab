@@ -8,6 +8,8 @@ let currentChatId = null;
 const STORAGE_KEY = "ai-chat-app";
 const STORAGE_VERSION = 1;
 
+// --- Storage Layer ---
+
 function saveChatSessions() {
     try {
         const data = {
@@ -69,6 +71,8 @@ function clearStoredChats() {
     }
 }
 
+// --- Application State Helpers ---
+
 function createChatObject() {
     return {
         id: `chat-${crypto.randomUUID()}`,
@@ -82,11 +86,12 @@ function createChatObject() {
 function createChat() {
     const chat = createChatObject();
     chatSessions.push(chat);
-    saveChatSessions();
     return chat;
 }
 
 function setCurrentChat(chatId) {
+    if (currentChatId === chatId) return;
+    
     const exists = chatSessions.some(c => c.id === chatId);
     if (exists) {
         currentChatId = chatId;
