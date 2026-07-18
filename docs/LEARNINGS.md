@@ -2,6 +2,16 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.1.1: AI Title Generation Backend Refactor
+Learned:
+* **LLM Output Sanitization:** You can never implicitly trust the output of an LLM, even when explicitly instructed (e.g., "no quotes"). Building a deterministic, regex-based sanitation utility is mandatory to prevent UI bugs caused by rogue formatting.
+* **Prompt Modularity:** Hardcoding multi-line prompts inside router files creates unreadable code. Abstracting them into a `prompts/` directory adheres to the Single Responsibility Principle and creates a highly scalable structure for future AI agents.
+
+## v1.1.0: AI Generated Chat Titles (Chat Sessions Step 3)
+Learned:
+* **Detached Promises:** Executing a network request `.then()` without `await`ing it inside an async function is a powerful pattern for non-blocking background tasks (like analytics or metadata fetching) that shouldn't hold up the main UI thread.
+* **Resilient UX:** By designing non-critical features (like auto-titling) to fail silently, you protect the core user experience (chatting) from unnecessary disruption.
+
 ## v1.0.1: Functional Sidebar Architecture Refactor
 Learned:
 * **Separation of Presentation and Logic:** Inline styling applied via JS (`item.style.backgroundColor`) is an anti-pattern that couples logic and design. Native CSS class toggling (`classList.add("active")`) respects this boundary and relies on the stylesheet for rendering intent.

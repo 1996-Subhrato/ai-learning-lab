@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.1.1] - 2026-07-18
+### Changed
+- Abstracted the chat title prompt into a dedicated module (`prompts/generateChatTitlePrompt.js`).
+- Refactored `/google/title` to communicate with the Gemini API using the standardized `contents` array structure.
+- Implemented strict output sanitization (`utils/sanitizeChatTitle.js`) to strip erratic formatting from LLM responses before returning them to the client.
+
+
+## [v1.1.0] - 2026-07-18
+### Added
+- Contextual, AI-generated sidebar chat titles replacing "New Chat".
+- Dedicated `POST /google/title` backend route specifically prompted to return 3-5 word summaries.
+- Asynchronous, non-blocking title generation architecture triggered exclusively after the first successful stream completes.
+
+
 ## [v1.0.1] - 2026-07-18
 ### Changed
 - Centralized UI synchronization via `refreshUI()`.

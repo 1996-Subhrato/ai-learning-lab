@@ -125,6 +125,46 @@ function renderSidebar() {
     initializeSidebarIcons();
 }
 
+function updateChatTitle(chatId, title) {
+    const chat = chatSessions.find(c => c.id === chatId);
+    if (chat && title) {
+        chat.title = title;
+        chat.updatedAt = new Date();
+    }
+}
+
+function shouldGenerateTitle(chat) {
+    if (!chat || chat.title !== "New Chat") return false;
+    
+    const userMessages = chat.messages.filter(m => m.role === "user");
+    if (userMessages.length !== 1) return false;
+    
+    const lastMessage = chat.messages[chat.messages.length - 1];
+    return lastMessage.role === "assistant" && lastMessage.complete === true;
+}
+
+async function generateChatTitle(chat) {
+    try {
+        const userMessages = chat.messages.filter(m => m.role === "user");
+        if (userMessages.length === 0) return null;
+        
+        const response = await fetch("/google/title", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: userMessages[0].content })
+        });
+        
+        if (!response.ok) return null;
+        
+        const data = await response.json();
+        return data.title || null;
+    } catch (error) {
+        return null;
+    }
+}
+
 document.querySelectorAll(".new-chat-btn, .new-chat-mobile-btn").forEach(btn => {
     btn.addEventListener("click", handleNewChat);
 });
@@ -319,6 +359,16 @@ async function sendMessage() {
                 content: accumulatedText,
                 complete: true
             });
+            
+            const currentChat = getCurrentChat();
+            if (shouldGenerateTitle(currentChat)) {
+                generateChatTitle(currentChat).then(title => {
+                    if (title) {
+                        updateChatTitle(currentChat.id, title);
+                        refreshUI();
+                    }
+                });
+            }
         }
 
     } catch (error) {

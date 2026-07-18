@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Completed
+* [x] v1.1.0 - Chat Sessions Architecture (Step 3 - AI Generated Titles)
+* [x] v1.0.1 - Functional Sidebar Architecture Refactor
 * [x] v1.0.0 - Chat Sessions Architecture (Step 2 - Sidebar UI)
 * [x] v0.9.1 - Chat Sessions Architecture (Step 1 - Data Model Refactor)
 * [x] v0.9.0 - Chat Sessions Architecture (Step 1 - Data Model)
@@ -16,7 +18,7 @@
 ## In Progress
 
 ## Planned
-* [ ] Chat Sessions (Step 3 - AI Generated Titles)
+* [ ] Persistent Storage (MongoDB)
 * Multiple Chats
 * Authentication
 * MongoDB

@@ -1,5 +1,7 @@
 const express = require("express");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const generateChatTitlePrompt = require("../prompts/generateChatTitlePrompt");
+const sanitizeChatTitle = require("../utils/sanitizeChatTitle");
 
 const router = express.Router();
 
@@ -85,6 +87,33 @@ router.post('/chat', async (req, res) => {
         } else {
             res.end();
         }
+    }
+});
+
+router.post('/title', async (req, res) => {
+    try {
+        const { message } = req.body;
+        if (!message || typeof message !== 'string') {
+            return res.status(400).json({ success: false, message: "Valid message required." });
+        }
+
+        const promptText = generateChatTitlePrompt(message);
+        
+        const contents = [
+            {
+                role: "user",
+                parts: [{ text: promptText }]
+            }
+        ];
+
+        const result = await model.generateContent({ contents });
+        const rawTitle = result.response.text();
+        const cleanTitle = sanitizeChatTitle(rawTitle);
+        
+        res.json({ title: cleanTitle });
+    } catch (error) {
+        console.error("Error in /google/title route:", error);
+        res.status(500).json({ success: false, message: "Failed to generate title." });
     }
 });
 

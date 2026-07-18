@@ -2,6 +2,49 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.1.1
+**Date:** 2026-07-18
+**Feature Name:** AI Title Generation Backend Refactor
+**Objective:** Improve the maintainability, security, and scalability of the backend `/google/title` route.
+**Problem Statement:** The AI Title generation endpoint embedded a raw, multi-line string prompt directly within the routing logic. Additionally, it sent raw string strings to the Gemini API instead of utilizing the standardized `contents` array structure used by the primary chat route. Finally, it dangerously passed raw LLM output directly back to the frontend without any sanitization.
+**What Was Implemented:**
+* Abstracted the prompt engineering logic into a dedicated module: `prompts/generateChatTitlePrompt.js`.
+* Rebuilt the `/google/title` Gemini request to utilize the structured `contents` -> `role` -> `parts` array format, perfectly mirroring `/google/chat`.
+* Created a strict output sanitizer utility: `utils/sanitizeChatTitle.js` which forcefully strips quotes, trims whitespace, collapses inner spacing, and truncates the string to 50 characters.
+**Internal Working:** The `/google/title` route now acts strictly as a traffic controller. It receives the `message`, passes it to the `generateChatTitlePrompt` helper, wraps the resulting string in the `contents` format, sends it to Gemini, passes the raw output through `sanitizeChatTitle`, and finally returns the sanitized string to the client. 
+**Architecture Decisions:** Extracting prompt generation into the `prompts` directory prepares the architecture for future AI enhancements (like summarization or metadata extraction) without turning the route file into a monolithic text block. Forcing all AI output through a sanitizer ensures that if the LLM disobeys formatting instructions (e.g., returning `"Title"` instead of `Title`), the frontend still receives pristine data.
+**Libraries Used:** Vanilla JS, Express.
+**Folder/File Changes:** Created `prompts/generateChatTitlePrompt.js` and `utils/sanitizeChatTitle.js`. Modified `routes/google-gemini.js`.
+**Challenges Faced:** N/A (Standard Refactoring).
+**Solutions:** N/A.
+**Lessons Learned:** Never trust LLM output. Even with strict instructions ("No quotes"), language models can and will hallucinate formatting. Always build a deterministic sanitation layer to protect the application's state.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Persistent Storage (MongoDB).
+
+---
+
+### Version v1.1.0
+**Date:** 2026-07-18
+**Feature Name:** AI Generated Chat Titles (Chat Sessions Step 3)
+**Objective:** Replace the generic "New Chat" sidebar labels with contextual, AI-generated titles without degrading the perceived performance of the main chat stream.
+**Problem Statement:** Every new session in the sidebar was named "New Chat", making it impossible for users to differentiate between historical threads. However, generating a title requires a separate API call to Gemini, which could introduce latency if injected into the critical response path.
+**What Was Implemented:**
+* Built a new `/google/title` backend route strictly configured to prompt Gemini for short, unformatted 3-5 word summaries.
+* Implemented `shouldGenerateTitle()` to deterministically check if a chat is fresh and has successfully received its first complete AI response.
+* Wrote an asynchronous `generateChatTitle()` fetcher that runs completely detached from the `sendMessage()` lifecycle.
+* Implemented `updateChatTitle()` to mutate the internal data model, followed by a silent `refreshUI()` to snap the new title into the DOM.
+**Internal Working:** When a user sends their first message, the standard streaming engine fires. Once the stream successfully closes and `complete: true` is saved to state, `shouldGenerateTitle` evaluates to true. A detached Promise fires off to `/google/title`. When it returns seconds later, it overwrites `chat.title` and triggers `refreshUI()`, updating the sidebar seamlessly while the user is reading their response.
+**Architecture Decisions:** Generating the title asynchronously *after* the stream finishes guarantees absolute zero latency impact on the user's chat experience. Treating title generation as a silent, non-critical background task ensures that if the Gemini API hiccups, the user's primary workflow is entirely unaffected.
+**Libraries Used:** Node.js, Express, @google/generative-ai.
+**Folder/File Changes:** Modified `routes/google-gemini.js` and `public/js/script.js`.
+**Challenges Faced:** N/A
+**Solutions:** N/A.
+**Lessons Learned:** Background UI mutation relies heavily on unidirectional data flow. Because `refreshUI()` was implemented in the previous refactor, swapping the title became a trivial 2-line state mutation rather than a fragile jQuery-style DOM lookup.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Multiple Chats/Chat Switching UI is complete. Next is likely persistent storage (MongoDB).
+
+---
+
 ### Version v1.0.1
 **Date:** 2026-07-18
 **Feature Name:** Functional Sidebar Architecture Refactor
