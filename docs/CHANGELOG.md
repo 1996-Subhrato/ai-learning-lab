@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.0.0] - 2026-07-18
+### Added
+- **Phase 3 UI:** Added a contextual "Rename" action button (pencil icon) to all sidebar chat items. The button reveals itself gracefully on hover. Currently wired to a functional placeholder prompt in preparation for persistence wiring.
+
+
 ## [v2.4.0] - 2026-07-18
 ### Changed
 - **Performance Optimization:** Refactored state-mutation chains to prevent double-writes to `LocalStorage` during chat creation and initialization.

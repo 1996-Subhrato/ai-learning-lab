@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v3.0.0: Rename Chat UI
+Learned:
+* **CSS Flexbox Text Truncation:** To successfully apply `text-overflow: ellipsis` to text sitting next to a fixed-width action button inside a flex container, the text must be wrapped in a nested container with `overflow: hidden` and `min-width: 0` explicitly set, allowing the flex engine to collapse the text instead of pushing the button out of bounds.
+* **Event Bubbling Control:** When nesting a clickable UI action (like a rename button) inside a parent container that is also clickable (like a chat selector), calling `e.stopPropagation()` on the child is critical to prevent the click from bleeding up the DOM tree and triggering both operations simultaneously.
+
 ## v2.4.0: Storage Helper Refactor & Write Optimization
 Learned:
 * **Mutation Chaining vs. I/O Churn:** Centralizing state changes (e.g. every helper automatically saves) is excellent for consistency, but creates redundant I/O churn when multiple helpers are invoked synchronously in a chain (e.g., `createChat()` -> `setCurrentChat()`). Optimizing this requires deferring the I/O commitment to the final step of the chain.

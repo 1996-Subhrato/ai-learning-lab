@@ -208,7 +208,31 @@ function createSidebarItem(chat) {
     item.className = "history-item";
     item.dataset.chatId = chat.id;
     
-    item.innerHTML = `<i data-lucide="message-square"></i> ${chat.title}`;
+    const titleWrapper = document.createElement("div");
+    titleWrapper.className = "chat-title-wrapper";
+    titleWrapper.innerHTML = `<i data-lucide="message-square"></i> <span>${chat.title}</span>`;
+    
+    const actionsDiv = document.createElement("div");
+    actionsDiv.className = "chat-actions";
+    
+    const renameBtn = document.createElement("button");
+    renameBtn.className = "rename-btn";
+    renameBtn.setAttribute("aria-label", "Rename Chat");
+    renameBtn.title = "Rename Chat";
+    renameBtn.innerHTML = `<i data-lucide="pencil"></i>`;
+    
+    renameBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (isGenerationInProgress()) return;
+        console.log("Rename Chat", chat.id);
+        prompt("Rename Chat (Placeholder UI)", chat.title);
+    });
+    
+    actionsDiv.appendChild(renameBtn);
+    
+    item.appendChild(titleWrapper);
+    item.appendChild(actionsDiv);
+    
     item.addEventListener("click", () => {
         if (isGenerationInProgress()) return;
         setCurrentChat(chat.id);

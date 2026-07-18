@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v3.0.0
+**Date:** 2026-07-18
+**Feature Name:** Rename Chat UI (PR 3.1)
+**Objective:** Phase 3 officially begins! Implement the front-end user interface for renaming chat sessions from the sidebar without deploying the functional persistence logic yet.
+**Problem Statement:** Users need an accessible, intuitive way to manually override auto-generated or default chat titles. Doing this required embedding an action button inside an existing dense UI layout (the sidebar history items) without disrupting text wrapping or click zones.
+**What Was Implemented:**
+* Refactored `createSidebarItem()` in `script.js` to render a robust flexbox structure separating the title wrapper from an actions container.
+* Injected a new "Rename Chat" button utilizing the Lucide `pencil` icon.
+* Wired up a placeholder JavaScript interaction using a native `prompt()` to log interactions, aggressively stopping event propagation so clicks don't accidentally switch the active chat.
+* Upgraded `.history-item` in `style.css` to handle hover-state injection, gracefully hiding the action button by default and revealing it when the user hovers over the chat entry.
+**Internal Working:** When the sidebar rendering loop constructs DOM nodes, it now builds an interactive flex container. The rename action is bound with `e.stopPropagation()` and is guarded by `isGenerationInProgress()` to block user interactions during active streaming responses.
+**Architecture Decisions:** Opted for a progressive enhancement approach, separating the layout structural work (this PR) from the payload validation and state persistence work (next PR) to ensure stable UX.
+**Libraries Used:** Vanilla JS, CSS Flexbox, Lucide Icons.
+**Folder/File Changes:** Modified `public/js/script.js` and `public/css/style.css`.
+**Challenges Faced:** Maintaining the `text-overflow: ellipsis` effect on the chat title text when wrapping it alongside an action button.
+**Solutions:** Replaced the pure text node with a dedicated flex `.chat-title-wrapper` containing an `overflow: hidden` span, forcing the CSS engine to respect the text boundary.
+**Lessons Learned:** When introducing nested clickable regions (like a button inside a clickable div), rigorous event propagation management (`stopPropagation`) is strictly required to prevent catastrophic state switching cascades.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Actually saving the renamed title to state and LocalStorage.
+
+---
+
 ### Version v2.4.0
 **Date:** 2026-07-18
 **Feature Name:** Storage Helper Refactor & Write Optimization (LocalStorage Persistence PR 2.5)
