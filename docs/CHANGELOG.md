@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v3.3.0] - 2026-07-18
+### Added
+- **Form Validation:** The Rename Modal now strictly rejects empty strings, whitespace-only strings, and submissions that match the current title.
+- **Inline Error UI:** Users now receive clear, inline error messages within the modal itself (e.g., "Chat name cannot be empty.") without triggering browser alerts.
+- **Auto-Clearing Errors:** The error message intelligently disappears as soon as the user starts typing again.
+
+
 ## [v3.2.0] - 2026-07-18
 ### Added
 - **In-Memory Renaming:** The Rename Modal now fully updates the chat session title in active memory.

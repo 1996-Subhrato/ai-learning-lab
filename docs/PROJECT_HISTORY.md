@@ -2,6 +2,30 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v3.3.0
+**Date:** 2026-07-18
+**Feature Name:** Rename Validation (PR 3.4)
+**Objective:** Harden the Rename Modal input by preventing the user from saving invalid, empty, or duplicate titles while providing clear, inline error feedback.
+**Problem Statement:** Users could theoretically submit empty strings, massive strings of spaces, or submit without changing the name at all, leading to poor UX and confusing application state. The system needed defensive input handling before persistence could be hooked up.
+**What Was Implemented:**
+* Added a `.modal-error` container in `index.ejs` hooked up to `aria-live="polite"` for accessibility.
+* Added corresponding error state CSS in `style.css` (e.g. `border-color: #ff6b6b`).
+* Engineered a `validateChatTitle()` helper in `script.js` to assert that the trimmed input is neither empty nor identical to the current title.
+* Implemented `showRenameError()` and `clearRenameError()` DOM manipulators.
+* Re-wired `handleRenameSave()` to block modal closure and block state mutation if validation fails.
+* Attached an `input` event listener to the modal input to auto-clear error states as soon as the user resumes typing.
+**Internal Working:** The `handleRenameSave` now acts as a strict gateway. It delegates rules to `validateChatTitle`. If the boolean returns false, the function terminates early, leaving the modal open and displaying the inline error message. 
+**Architecture Decisions:** validation is structurally isolated into its own function, ensuring that the presentation layer (modal behavior) and logic layer (validation rules) remain untangled.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `views/index.ejs`, `public/js/script.js`, and `public/css/style.css`.
+**Challenges Faced:** None, standard form validation mechanics.
+**Solutions:** N/A.
+**Lessons Learned:** Real-time UX feedback (clearing errors immediately on keypress) dramatically improves perceived application quality compared to waiting for the user to hit "Save" again.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement actual LocalStorage persistence.
+
+---
+
 ### Version v3.2.0
 **Date:** 2026-07-18
 **Feature Name:** Rename State (PR 3.3)

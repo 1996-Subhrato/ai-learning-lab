@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v3.3.0: Rename Validation
+Learned:
+* **UX Micro-Interactions:** A core tenet of modern form validation is that validation errors should be loud when triggered, but disappear instantly when the user attempts a correction. Tying `clearRenameError()` to the native `input` event creates a highly polished, responsive feel.
+
 ## v3.2.0: Rename State
 Learned:
 * **Decoupled Architecture:** Implementing state mutations purely in memory before wiring up the persistence layer is a highly effective way to isolate DOM synchronization bugs from asynchronous storage bugs.

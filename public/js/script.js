@@ -4,6 +4,7 @@ const messages = document.getElementById("messages");
 
 const renameModal = document.getElementById("renameModal");
 const renameInput = document.getElementById("renameInput");
+const renameError = document.getElementById("renameError");
 const cancelRenameBtn = document.getElementById("cancelRenameBtn");
 const saveRenameBtn = document.getElementById("saveRenameBtn");
 
@@ -108,9 +109,22 @@ function setCurrentChat(chatId) {
 
 let currentRenameChatId = null;
 
+function showRenameError(message) {
+    renameError.textContent = message;
+    renameError.style.display = "block";
+    renameInput.classList.add("error");
+}
+
+function clearRenameError() {
+    renameError.textContent = "";
+    renameError.style.display = "none";
+    renameInput.classList.remove("error");
+}
+
 function openRenameModal(chatId, currentTitle) {
     currentRenameChatId = chatId;
     renameInput.value = currentTitle;
+    clearRenameError();
     renameModal.style.display = "flex";
     renameModal.setAttribute("aria-hidden", "false");
     renameInput.focus();
@@ -121,31 +135,50 @@ function closeRenameModal() {
     renameModal.style.display = "none";
     renameModal.setAttribute("aria-hidden", "true");
     renameInput.value = "";
+    clearRenameError();
+}
+
+function validateChatTitle(newTitle, currentTitle) {
+    if (!newTitle || newTitle.trim() === "") {
+        showRenameError("Chat name cannot be empty.");
+        return false;
+    }
+    if (newTitle.trim() === currentTitle) {
+        showRenameError("Please enter a different name.");
+        return false;
+    }
+    return true;
 }
 
 function renameChat(chatId, newTitle) {
-    if (!newTitle || newTitle.trim() === "") return false;
-    
     const chat = chatSessions.find(c => c.id === chatId);
     if (chat) {
         chat.title = newTitle.trim();
         chat.updatedAt = new Date();
-        // Explicitly NOT saving to LocalStorage per PR 3.3
+        // Explicitly NOT saving to LocalStorage per PR 3.4
         return true;
     }
     return false;
 }
 
 function handleRenameSave() {
+    if (!currentRenameChatId) return;
+    
+    const chat = chatSessions.find(c => c.id === currentRenameChatId);
+    if (!chat) return;
+    
     const newTitle = renameInput.value;
-    if (currentRenameChatId) {
+    
+    if (validateChatTitle(newTitle, chat.title)) {
         const success = renameChat(currentRenameChatId, newTitle);
         if (success) {
             renderSidebar();
+            closeRenameModal();
         }
     }
-    closeRenameModal();
 }
+
+renameInput.addEventListener("input", clearRenameError);
 
 cancelRenameBtn.addEventListener("click", closeRenameModal);
 saveRenameBtn.addEventListener("click", handleRenameSave);

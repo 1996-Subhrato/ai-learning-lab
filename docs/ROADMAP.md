@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v3.3.0 - Phase 3: Rename Validation
 * [x] v3.2.0 - Phase 3: Rename State
 * [x] v3.1.0 - Phase 3: Rename Modal
 * [x] v3.0.0 - Phase 3: Rename Chat UI
