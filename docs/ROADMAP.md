@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Completed
+* [x] v1.3.0 - Regenerate Response (Step 1 - UI)
+* [x] v1.2.1 - Refactor Copy Response Feature
 * [x] v1.2.0 - Copy AI Response
 * [x] v1.1.1 - AI Title Generation Backend Refactor
 * [x] v1.1.0 - Chat Sessions Architecture (Step 3 - AI Generated Titles)
@@ -20,6 +22,7 @@
 ## In Progress
 
 ## Planned
+* [ ] Regenerate Response (Step 2 - API Logic)
 * [ ] Persistent Storage (MongoDB)
 * Multiple Chats
 * Authentication

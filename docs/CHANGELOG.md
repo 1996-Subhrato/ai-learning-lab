@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.0] - 2026-07-18
+### Added
+- "Regenerate" UI button injected exclusively beneath the most recent completed AI response.
+- `message-actions` flex container wrapper in the DOM to seamlessly group Copy and Regenerate tools side-by-side.
+- Conditional rendering logic to dynamically calculate the `isLastAssistantMessage` node during historical session loads.
+
+
 ## [v1.2.0] - 2026-07-18
 ### Added
 - "Copy AI Response" button natively integrated into completed assistant messages.

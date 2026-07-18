@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.3.0
+**Date:** 2026-07-18
+**Feature Name:** Regenerate Response Button (UI Only)
+**Objective:** Introduce the "Regenerate" UI button adjacent to the Copy button on the latest completed assistant message, laying the groundwork for a future regenerate API integration.
+**Problem Statement:** Users had no visual mechanism to request a new AI response if the previous one was unsatisfactory. We needed a UI foundation before building out the complex backend streaming and payload generation logic.
+**What Was Implemented:**
+* Built a new `.message-actions` flex container to cleanly group action buttons below AI responses side-by-side.
+* Created `renderRegenerateButton(container)` using the exact same structural paradigm as the Copy button, complete with Lucide icons and hover states.
+* Upgraded `renderCurrentConversation()` and `renderMessage()` to conditionally calculate and flag `isLastAssistantMessage`, ensuring the Regenerate button strictly appears only on the terminal assistant node of the conversation tree.
+* Attached a placeholder `console.log("Regenerate clicked")` event listener to prevent premature API calls.
+**Internal Working:** During a historic render, the script iterates through messages, caching `findLastIndex` for the assistant role. When rendering each node, it constructs the `.message-actions` div. It always appends the Copy button (if complete), but selectively appends the Regenerate button only if `isLastAssistantMessage` is true. During an active stream (`sendMessage`), the Regenerate button is injected simultaneously with the Copy button only after the final streaming chunk is successfully parsed.
+**Architecture Decisions:** By creating a wrapper `.message-actions`, CSS styling was simplified and future action buttons (like Thumbs Up/Down or Edit) can be trivially appended without breaking the layout grid. 
+**Libraries Used:** Vanilla JS, Lucide.
+**Folder/File Changes:** Modified `public/css/style.css` and `public/js/script.js`.
+**Challenges Faced:** Ensuring the Regenerate button strictly attached to the final message during historical hydration while completely avoiding layout jumps during live streaming.
+**Solutions:** Passed an `isLastAssistantMessage` boolean flag down the rendering pipeline.
+**Lessons Learned:** Modularizing DOM component construction (e.g. `renderRegenerateButton(container)`) keeps massive orchestrator functions like `sendMessage()` and `renderMessage()` clean, focused, and maintainable.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement actual backend request, payload construction, and conversation rollback on Regenerate click.
+
+---
+
 ### Version v1.2.0
 **Date:** 2026-07-18
 **Feature Name:** Copy AI Response

@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.3.0: Regenerate Response Button (UI Only)
+Learned:
+* **Conditional UI Injection:** Passing structural flags (like `isLastAssistantMessage`) down a rendering pipeline allows component generators to remain pure and completely decoupled from business state logic, drastically improving code reuse.
+* **Component Grouping:** Abstracting disjointed buttons into a semantic flex container (`.message-actions`) prevents margin/padding fragmentation and establishes a robust layout protocol for future feature additions.
+
 ## v1.2.0: Copy AI Response
 Learned:
 * **Closure Data Binding:** When attaching event listeners to dynamically generated UI elements (like a Copy button), passing the raw state string directly into the callback closure is significantly cleaner and more secure than reading `innerText` back out of the DOM tree.

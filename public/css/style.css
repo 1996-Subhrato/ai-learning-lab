@@ -629,8 +629,16 @@ textarea::placeholder {
     text-align: center;
 }
 
-/* Copy Button */
-.copy-btn {
+/* Message Actions Container */
+.message-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 12px;
+}
+
+/* Copy & Regenerate Buttons */
+.copy-btn, .regenerate-btn {
     background: transparent;
     border: none;
     color: var(--text-secondary);
@@ -639,19 +647,18 @@ textarea::placeholder {
     gap: 6px;
     font-size: 0.8rem;
     cursor: pointer;
-    margin-top: 12px;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease;
     align-self: flex-start;
     padding: 4px 8px;
     border-radius: 4px;
 }
 
-.copy-btn:hover {
+.copy-btn:hover, .regenerate-btn:hover {
     color: var(--text-primary);
     background: var(--bg-hover);
 }
 
-.copy-btn i {
+.copy-btn i, .regenerate-btn i {
     width: 14px;
     height: 14px;
 }

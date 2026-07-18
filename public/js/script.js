@@ -276,7 +276,23 @@ function showCopySuccess(button) {
     }, 2000);
 }
 
-function renderMessage(msg) {
+function renderRegenerateButton(container) {
+    const regenBtn = document.createElement("button");
+    regenBtn.className = "regenerate-btn";
+    regenBtn.setAttribute("aria-label", "Regenerate response");
+    regenBtn.innerHTML = `<i data-lucide="refresh-cw"></i> Regenerate`;
+    
+    regenBtn.addEventListener("click", () => {
+        console.log("Regenerate clicked");
+    });
+    
+    container.appendChild(regenBtn);
+    if (window.lucide) {
+        lucide.createIcons({ root: container });
+    }
+}
+
+function renderMessage(msg, isLastAssistantMessage = false) {
     if (msg.role === 'user') {
         createUserMessage(msg.content);
     } else if (msg.role === 'assistant') {
@@ -284,7 +300,16 @@ function renderMessage(msg) {
         renderMarkdown(aiResponseDiv, msg.content);
         
         if (msg.complete && msg.content) {
-            renderCopyButton(aiResponseDiv.parentNode, msg.content);
+            const actionsContainer = document.createElement("div");
+            actionsContainer.className = "message-actions";
+            
+            renderCopyButton(actionsContainer, msg.content);
+            
+            if (isLastAssistantMessage) {
+                renderRegenerateButton(actionsContainer);
+            }
+            
+            aiResponseDiv.parentNode.appendChild(actionsContainer);
         }
     }
 }
@@ -292,8 +317,12 @@ function renderMessage(msg) {
 function renderCurrentConversation() {
     clearConversation();
     const currentMessages = getCurrentMessages();
-    for (const msg of currentMessages) {
-        renderMessage(msg);
+    const lastAssistantMessageIndex = currentMessages.findLastIndex(msg => msg.role === 'assistant');
+    
+    for (let i = 0; i < currentMessages.length; i++) {
+        const msg = currentMessages[i];
+        const isLastAssistantMessage = (i === lastAssistantMessageIndex);
+        renderMessage(msg, isLastAssistantMessage);
     }
     messages.scrollTop = messages.scrollHeight;
 }
@@ -414,7 +443,13 @@ async function sendMessage() {
             });
             
             if (aiResponseDiv && aiResponseDiv.parentNode) {
-                renderCopyButton(aiResponseDiv.parentNode, accumulatedText);
+                const actionsContainer = document.createElement("div");
+                actionsContainer.className = "message-actions";
+                
+                renderCopyButton(actionsContainer, accumulatedText);
+                renderRegenerateButton(actionsContainer);
+                
+                aiResponseDiv.parentNode.appendChild(actionsContainer);
             }
             
             const currentChat = getCurrentChat();
