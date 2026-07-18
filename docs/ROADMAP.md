@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v3.1.0 - Phase 3: Rename Modal
 * [x] v3.0.0 - Phase 3: Rename Chat UI
 * [x] v2.4.0 - Phase 2: Storage Helper Refactor & Write Optimization
 * [x] v2.3.0 - Phase 2: Storage Versioning & Safe Recovery

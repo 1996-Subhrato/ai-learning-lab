@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v3.1.0: Rename Modal
+Learned:
+* **Vanilla JS Modals:** Building an accessible modal from scratch requires deliberate handling of overlay click events and global keyboard events (like `Escape`) to match user expectations established by native `<dialog>` elements or heavy UI libraries.
+
 ## v3.0.0: Rename Chat UI
 Learned:
 * **CSS Flexbox Text Truncation:** To successfully apply `text-overflow: ellipsis` to text sitting next to a fixed-width action button inside a flex container, the text must be wrapped in a nested container with `overflow: hidden` and `min-width: 0` explicitly set, allowing the flex engine to collapse the text instead of pushing the button out of bounds.

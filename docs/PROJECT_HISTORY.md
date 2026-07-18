@@ -2,6 +2,29 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v3.1.0
+**Date:** 2026-07-18
+**Feature Name:** Rename Modal (PR 3.2)
+**Objective:** Replace the placeholder browser prompt with a fully integrated, accessible DOM modal for chat renaming, without hooking up the persistence layer yet.
+**Problem Statement:** The native `prompt()` was a poor user experience. The application needed a proper dialog overlay that captures focus, displays the current chat title, and allows users to cancel or save their changes.
+**What Was Implemented:**
+* Added `<div id="renameModal">` structure to `index.ejs` featuring a blurred backdrop overlay and a clean card interface with an input box.
+* Wrote comprehensive CSS in `style.css` for `.modal-backdrop`, `.modal-content`, `.modal-input`, and interactive `.btn-primary`/`.btn-secondary` controls.
+* Built state management logic in `script.js` (`openRenameModal`, `closeRenameModal`, `handleRenameSave`).
+* Hooked the sidebar "Rename" button up to `openRenameModal`.
+* Implemented UX quality-of-life enhancements: clicking the modal backdrop closes the modal, and pressing `Escape` closes the modal.
+**Internal Working:** The modal operates purely in the DOM, pulling the active `chat.title` on launch. Clicking 'Save' currently serves as a functional placeholder (`console.log`) and gracefully cleans up the modal state.
+**Architecture Decisions:** Separated the modal presentation layer from the persistence layer to maintain strict PR scoping.
+**Libraries Used:** Vanilla JS, CSS.
+**Folder/File Changes:** Modified `views/index.ejs`, `public/js/script.js`, and `public/css/style.css`.
+**Challenges Faced:** None, standard modal implementation.
+**Solutions:** N/A.
+**Lessons Learned:** Building custom modals in Vanilla JS is often superior to using heavy library dependencies when only one or two simple inputs are required, provided you remember to handle keyboard accessibility (Escape key).
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement the actual persistence logic to save the renamed chat title to memory and LocalStorage.
+
+---
+
 ### Version v3.0.0
 **Date:** 2026-07-18
 **Feature Name:** Rename Chat UI (PR 3.1)

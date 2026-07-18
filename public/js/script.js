@@ -2,6 +2,11 @@ const btn = document.getElementById("sendBtn");
 const prompt = document.getElementById("prompt");
 const messages = document.getElementById("messages");
 
+const renameModal = document.getElementById("renameModal");
+const renameInput = document.getElementById("renameInput");
+const cancelRenameBtn = document.getElementById("cancelRenameBtn");
+const saveRenameBtn = document.getElementById("saveRenameBtn");
+
 const chatSessions = [];
 let currentChatId = null;
 
@@ -98,6 +103,45 @@ function setCurrentChat(chatId) {
         saveChatSessions();
     }
 }
+
+// --- Rename Modal Logic ---
+
+let currentRenameChatId = null;
+
+function openRenameModal(chatId, currentTitle) {
+    currentRenameChatId = chatId;
+    renameInput.value = currentTitle;
+    renameModal.style.display = "flex";
+    renameModal.setAttribute("aria-hidden", "false");
+    renameInput.focus();
+}
+
+function closeRenameModal() {
+    currentRenameChatId = null;
+    renameModal.style.display = "none";
+    renameModal.setAttribute("aria-hidden", "true");
+    renameInput.value = "";
+}
+
+function handleRenameSave() {
+    console.log("Rename not implemented yet");
+    closeRenameModal();
+}
+
+cancelRenameBtn.addEventListener("click", closeRenameModal);
+saveRenameBtn.addEventListener("click", handleRenameSave);
+
+renameModal.addEventListener("click", (e) => {
+    if (e.target === renameModal) {
+        closeRenameModal();
+    }
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && renameModal.style.display === "flex") {
+        closeRenameModal();
+    }
+});
 
 function getCurrentChat() {
     return chatSessions.find(c => c.id === currentChatId) || null;
@@ -224,8 +268,7 @@ function createSidebarItem(chat) {
     renameBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         if (isGenerationInProgress()) return;
-        console.log("Rename Chat", chat.id);
-        prompt("Rename Chat (Placeholder UI)", chat.title);
+        openRenameModal(chat.id, chat.title);
     });
     
     actionsDiv.appendChild(renameBtn);
