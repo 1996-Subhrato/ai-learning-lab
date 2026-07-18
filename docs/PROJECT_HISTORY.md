@@ -2,6 +2,48 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v2.1.0
+**Date:** 2026-07-18
+**Feature Name:** Restore Chat Sessions (LocalStorage Persistence PR 2.2)
+**Objective:** Fully restore previously saved application state during initial startup so users can pick up exactly where they left off.
+**Problem Statement:** While the application was successfully persisting data into local storage, the startup flow was not correctly validating the `currentChatId` against the actual restored payload.
+**What Was Implemented:**
+* Renamed `loadChatSessions()` to `restoreChatSessions()` for semantic clarity.
+* Added deterministic ID validation against the active chat during the restoration phase.
+* Updated `initializeChatSession()` to cleanly orchestrate the restore-or-fallback flow.
+**Internal Working:** During initialization, `restoreChatSessions()` parses the local storage JSON, rebuilds JavaScript Date objects, and verifies that the stored `currentChatId` actually exists within the deserialized `chatSessions` array. If it matches, the user is dropped right back into their active conversation. If the ID is orphaned or missing, the system gracefully falls back to selecting the first available chat (index 0). If the storage is completely empty or corrupted, it catches the error and signals the UI to create a brand new chat.
+**Architecture Decisions:** Restoration logic is kept strictly isolated inside the persistence layer. The `initializeChatSession()` function only ever asks the storage layer "did we restore?", and if yes, passes control blindly to the UI layer `refreshUI()` which natively knows how to render memory structures. 
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Handling edge cases where local storage might hold an array of sessions, but an invalid `currentChatId`.
+**Solutions:** A quick `some()` check against the IDs array provides a perfect guard clause before assigning the `currentChatId` singleton.
+**Lessons Learned:** Safely restoring state means validating references (like foreign keys) even in unstructured storage like LocalStorage.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Cloud persistence (MongoDB).
+
+---
+
+### Version v2.0.0
+**Date:** 2026-07-18
+**Feature Name:** Save Chat Sessions (LocalStorage Persistence)
+**Objective:** Store chat sessions and the currently active chat across browser page refreshes using the browser's native `localStorage` API.
+**Problem Statement:** Moving away from memory-only persistence to allow users to maintain their conversations and context across page loads. If users refreshed the page, the `chatSessions` array was completely wiped.
+**What Was Implemented:**
+* Built a standalone, reusable local storage layer: `saveChatSessions`, `loadChatSessions`, and `clearStoredChats` using the `ai-chat-app` key.
+* Modified `initializeChatSession` to prioritize bootstrapping from local storage. If storage parsing fails or is empty, it safely falls back to creating a fresh chat.
+* Wired up the `saveChatSessions()` helper to all state-mutating functions: `createChat`, `setCurrentChat`, `addMessage`, `rollbackLastMessage`, `updateChatTitle`, and `regenerateResponse`.
+**Internal Working:** During initialization, the app attempts to deserialize the stored state. Dates are reconstructed back into native JavaScript `Date` objects. If validation passes, `chatSessions` is populated and `currentChatId` is resumed. Any user action that changes the application state automatically syncs back to local storage, creating a seamless experience.
+**Architecture Decisions:** Adopted a centralized state injection model rather than sprawling `localStorage.setItem()` calls. Functions like `addMessage` maintain single-responsibility by managing state array updates, while internally delegating the final snapshot commit to the storage layer.
+**Libraries Used:** Vanilla JS (`localStorage`).
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Ensuring robust error handling if users had manually corrupted their browser's local storage with malformed JSON.
+**Solutions:** Wrapped the storage parser in a `try...catch` and validated array existence. A failure simply ignores the storage and starts a fresh session without crashing the app.
+**Lessons Learned:** Centralized storage layers heavily rely on clean state-mutation boundaries. Because all state changes were previously centralized (e.g. `addMessage`, `rollbackLastMessage`), adding persistence required adding less than 10 lines of injection code.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Cloud persistence (MongoDB).
+
+---
+
 ### Version v1.5.0
 **Date:** 2026-07-18
 **Feature Name:** Regenerate Edge Cases & Hardening (Regenerate Response Step 1.5)

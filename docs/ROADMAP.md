@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Completed
+* [x] v2.1.0 - Phase 2: Restore Chat Sessions
+* [x] v2.0.0 - Phase 2: Save Chat Sessions (LocalStorage Persistence)
 * [x] v1.5.0 - Regenerate Response (Step 5 - Edge Cases & Hardening)
 * [x] v1.4.0 - Regenerate Response (Step 4 - API Logic)
 * [x] v1.3.2 - Regenerate Response (Step 3 - State Query Architecture)

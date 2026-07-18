@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.1.0] - 2026-07-18
+### Added
+- Fully automated application state restoration on startup. 
+### Fixed
+- Fixed an edge case where a corrupted `currentChatId` could break UI initialization. The system now validates the active chat against the loaded array and falls back to the most recent conversation if a mismatch occurs.
+
+
+## [v2.0.0] - 2026-07-18
+### Added
+- Phase 2: LocalStorage persistence! The application now automatically saves chat sessions, titles, and active context directly in the browser. Refreshing the page will no longer clear your conversations.
+- Dedicated client-side storage architecture (`loadChatSessions`, `saveChatSessions`, `clearStoredChats`).
+
+
 ## [v1.5.0] - 2026-07-18
 ### Added
 - Implemented `isGenerationInProgress()` global safety lock to protect background state mutations.

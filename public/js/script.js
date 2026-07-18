@@ -5,6 +5,57 @@ const messages = document.getElementById("messages");
 const chatSessions = [];
 let currentChatId = null;
 
+const STORAGE_KEY = "ai-chat-app";
+
+function saveChatSessions() {
+    try {
+        const data = {
+            chatSessions,
+            currentChatId
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+        console.error("Failed to save chat sessions:", e);
+    }
+}
+
+function restoreChatSessions() {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            const data = JSON.parse(stored);
+            if (data && Array.isArray(data.chatSessions) && data.chatSessions.length > 0) {
+                chatSessions.length = 0;
+                data.chatSessions.forEach(chat => {
+                    chat.createdAt = new Date(chat.createdAt);
+                    chat.updatedAt = new Date(chat.updatedAt);
+                    chatSessions.push(chat);
+                });
+                
+                const validCurrentChat = chatSessions.some(c => c.id === data.currentChatId);
+                if (validCurrentChat) {
+                    currentChatId = data.currentChatId;
+                } else {
+                    currentChatId = chatSessions[0].id;
+                }
+                
+                return true;
+            }
+        }
+    } catch (e) {
+        console.error("Failed to restore chat sessions:", e);
+    }
+    return false;
+}
+
+function clearStoredChats() {
+    try {
+        localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+        console.error("Failed to clear stored chats:", e);
+    }
+}
+
 function createChatObject() {
     return {
         id: `chat-${crypto.randomUUID()}`,
@@ -18,6 +69,7 @@ function createChatObject() {
 function createChat() {
     const chat = createChatObject();
     chatSessions.push(chat);
+    saveChatSessions();
     return chat;
 }
 
@@ -25,6 +77,7 @@ function setCurrentChat(chatId) {
     const exists = chatSessions.some(c => c.id === chatId);
     if (exists) {
         currentChatId = chatId;
+        saveChatSessions();
     }
 }
 
@@ -71,6 +124,7 @@ function addMessage(message) {
     if (chat) {
         chat.messages.push(message);
         chat.updatedAt = new Date();
+        saveChatSessions();
     }
 }
 
@@ -79,12 +133,16 @@ function rollbackLastMessage() {
     if (chat && chat.messages.length > 0) {
         chat.messages.pop();
         chat.updatedAt = new Date();
+        saveChatSessions();
     }
 }
 
 function initializeChatSession() {
-    const initialChat = createChat();
-    setCurrentChat(initialChat.id);
+    const restored = restoreChatSessions();
+    if (!restored) {
+        const initialChat = createChat();
+        setCurrentChat(initialChat.id);
+    }
     refreshUI();
 }
 
@@ -161,6 +219,7 @@ function updateChatTitle(chatId, title) {
     if (chat && title) {
         chat.title = title;
         chat.updatedAt = new Date();
+        saveChatSessions();
     }
 }
 
@@ -423,6 +482,7 @@ async function regenerateResponse() {
         if (chat) {
             chat.messages.splice(lastAssistantIndex, 1);
             chat.updatedAt = new Date();
+            saveChatSessions();
         }
     }
     

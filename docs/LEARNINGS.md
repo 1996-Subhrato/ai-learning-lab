@@ -2,6 +2,16 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v2.1.0: Restore Chat Sessions
+Learned:
+* **Reference Integrity in Document Storage:** Because NoSQL/LocalStorage doesn't enforce foreign key constraints, manual validation is required. Before assuming `currentChatId` points to a real chat, verifying its existence using `Array.prototype.some()` prevents null reference exceptions when the UI attempts to render it.
+* **Separation of Concerns:** Data restoration should not be mixed with data rendering. The storage layer's only job is to populate the JavaScript memory arrays (`chatSessions`). Once complete, a single call to `refreshUI()` seamlessly rebuilds the entire DOM without needing to know *where* the data came from.
+
+## v2.0.0: Save Chat Sessions (LocalStorage Persistence)
+Learned:
+* **State Mutation Chokepoints:** When application state mutation is properly bottlenecked through a handful of centralized helper functions (`addMessage`, `rollbackLastMessage`), attaching a persistence layer becomes trivial. If state had been mutated directly via unstructured array pushes throughout the UI layer, persistence would have been extremely fragile.
+* **JSON Date Serialization:** `JSON.stringify()` converts `Date` objects to ISO strings, but `JSON.parse()` does NOT automatically convert them back. Reconstituting dates during the storage load phase is essential to prevent `TypeError: date.getTime is not a function` during UI sorting or formatting.
+
 ## v1.5.0: Regenerate Edge Cases & Hardening
 Learned:
 * **Asynchronous Race Conditions:** When a background process (like an HTTP streaming decoder) mutates application state dynamically over several seconds, any UI mechanisms that allow the user to shift context (e.g., clicking a sidebar to change `currentChatId`) will instantly corrupt the target data structure.
