@@ -1,6 +1,6 @@
 # AI Assistant Integration
 
-**Current Version:** `v1.3.0`
+**Current Version:** `v1.3.1`
 
 A premium, production-ready AI Chat application built with Node.js, Express, and Google's Generative AI (Gemini). The application features a beautiful, modern UI inspired by top-tier AI chatbots (like ChatGPT and Claude) and supports rich markdown rendering.
 

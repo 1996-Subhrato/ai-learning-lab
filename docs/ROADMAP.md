@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v1.3.1 - Regenerate Response (Step 2 - Payload Architecture Refactor)
 * [x] v1.3.0 - Regenerate Response (Step 1 - UI)
 * [x] v1.2.1 - Refactor Copy Response Feature
 * [x] v1.2.0 - Copy AI Response
@@ -22,7 +23,7 @@
 ## In Progress
 
 ## Planned
-* [ ] Regenerate Response (Step 2 - API Logic)
+* [ ] Regenerate Response (Step 3 - API Logic)
 * [ ] Persistent Storage (MongoDB)
 * Multiple Chats
 * Authentication

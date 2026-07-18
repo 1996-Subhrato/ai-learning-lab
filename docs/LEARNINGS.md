@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.3.1: Build Conversation Payload Helper
+Learned:
+* **Separation of Concerns:** Preparing API payload objects is fundamentally a business logic responsibility, not an orchestration or networking responsibility. Extracting pure data-transformation functions from network executors (like `sendMessage`) aggressively prevents code duplication when scaling complex features like Regenerate or Branching conversations.
+
 ## v1.3.0: Regenerate Response Button (UI Only)
 Learned:
 * **Conditional UI Injection:** Passing structural flags (like `isLastAssistantMessage`) down a rendering pipeline allows component generators to remain pure and completely decoupled from business state logic, drastically improving code reuse.

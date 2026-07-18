@@ -2,6 +2,26 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.3.1
+**Date:** 2026-07-18
+**Feature Name:** Build Conversation Payload Helper (Regenerate Response Step 1.2)
+**Objective:** Architecturally isolate the logic responsible for assembling the conversation payload array sent to the Gemini API.
+**Problem Statement:** Payload assembly was previously hardcoded directly within the massive `sendMessage()` block (`const payloadMessages = getCurrentMessages().filter(...)`). In order for the future "Regenerate" feature to request a new completion from the API, it would need the exact same payload generation logic. Leaving it inline inside `sendMessage()` would have forced severe code duplication.
+**What Was Implemented:**
+* Extracted the filtering array logic into a pure helper function: `buildConversationPayload()`.
+* Replaced the inline evaluation inside `sendMessage()` with a simple call to the new helper.
+**Internal Working:** The function executes a deterministic read against application state (`getCurrentMessages()`), filters out system states like aborted responses and loading indicators (`msg.complete === true`), and returns an identical JSON array to what `sendMessage()` originally constructed. 
+**Architecture Decisions:** Striving for absolute separation of concerns. The `sendMessage()` orchestrator's only job should be UI transitions and HTTP fetching. By pulling the data transformation out, the codebase is primed for the next Regenerate PR which can now safely rely on `buildConversationPayload()` for standard generation structures without bleeding into the standard chat workflow.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** N/A (Standard Refactoring).
+**Solutions:** N/A.
+**Lessons Learned:** Pure functions without side-effects are the bedrock of scalable applications. `buildConversationPayload()` never touches the DOM, never calls fetch, and never mutates state, ensuring absolute predictability.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement backend Regenerate API endpoint and frontend execution lifecycle.
+
+---
+
 ### Version v1.3.0
 **Date:** 2026-07-18
 **Feature Name:** Regenerate Response Button (UI Only)

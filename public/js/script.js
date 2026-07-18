@@ -37,6 +37,10 @@ function getCurrentMessages() {
     return chat ? chat.messages : [];
 }
 
+function buildConversationPayload() {
+    return getCurrentMessages().filter(msg => msg.role === 'user' || msg.complete);
+}
+
 function addMessage(message) {
     const chat = getCurrentChat();
     if (chat) {
@@ -373,7 +377,7 @@ async function sendMessage() {
     const loading = createLoadingMessage();
     messages.scrollTop = messages.scrollHeight;
 
-    const payloadMessages = getCurrentMessages().filter(msg => msg.role === 'user' || msg.complete);
+    const payloadMessages = buildConversationPayload();
 
     try {
         const response = await fetch("/google/chat", {

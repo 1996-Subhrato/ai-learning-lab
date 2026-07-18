@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.1] - 2026-07-18
+### Changed
+- Extracted inline API payload generation out of `sendMessage()` into a dedicated, reusable pure function: `buildConversationPayload()`.
+- Standardized payload filtering rules (excluding aborted or incomplete nodes) into a central business logic helper to prepare for upcoming Regenerate feature integrations.
+
+
 ## [v1.3.0] - 2026-07-18
 ### Added
 - "Regenerate" UI button injected exclusively beneath the most recent completed AI response.
