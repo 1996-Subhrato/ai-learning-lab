@@ -2,6 +2,29 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v5.3.0
+**Date:** 2026-07-18
+**Feature Name:** Search UX Improvements (PR 5.4)
+**Objective:** Polish the chat search experience by adding micro-interactions, keyboard accessibility, and visual feedback without altering the core filtering algorithm.
+**Problem Statement:** The basic search integration worked, but it felt slightly rigid. Typing could reset scroll positions, clearing the field required using the mouse, and users lacked feedback on exactly how many chats matched their query.
+**What Was Implemented:**
+* **Scroll Preservation:** Upgraded `renderSidebar()` to cache the `.history-list`'s `scrollTop` property before clearing the inner HTML, and strictly restoring it after rendering the filtered results. This prevents jarring scroll-jumps while typing.
+* **Keyboard Accessibility:** Attached a `keydown` listener to the search input. Pressing `Escape` while text is present instantly clears the search query and restores the full chat list while maintaining cursor focus.
+* **Result Counters:** Dynamically injected a `<div class="search-result-count">` header whenever a search is active, providing users with explicit feedback (e.g., "3 chats found").
+* **Click-to-Focus:** Added an event listener to the outer `.sidebar-search` container so clicking anywhere near the input automatically focuses the cursor.
+* **Friendly Empty State:** Updated the empty state message to include secondary helper text ("Try a different search") for a softer UI experience.
+**Internal Working:** The UX enhancements are layered seamlessly over the existing DOM rendering pipeline. Scroll state preservation is handled synchronously during the `renderSidebar` loop.
+**Architecture Decisions:** Opted for vanilla DOM injection for the result counter rather than heavy templating, keeping the execution path incredibly fast.
+**Libraries Used:** Vanilla JS, CSS.
+**Folder/File Changes:** Modified `public/js/script.js` and `public/css/style.css`.
+**Challenges Faced:** Ensuring the clear button didn't trigger the container's focus event.
+**Solutions:** Used `!clearSearchBtn.contains(e.target)` to exclude the clear button and its inner icon from the container's click-to-focus behavior.
+**Lessons Learned:** Preserving transient DOM state (like `scrollTop` and `focus`) during aggressive re-renders is critical for making web applications feel native and polished.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Transitioning to MongoDB persistence or Authentication.
+
+---
+
 ### Version v5.2.0
 **Date:** 2026-07-18
 **Feature Name:** Search Sidebar Integration (PR 5.3)

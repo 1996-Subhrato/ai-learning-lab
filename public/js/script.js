@@ -305,11 +305,25 @@ chatSearchInput.addEventListener("input", () => {
     renderSidebar();
 });
 
+chatSearchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && chatSearchInput.value.length > 0) {
+        chatSearchInput.value = "";
+        clearSearchBtn.style.display = "none";
+        renderSidebar();
+    }
+});
+
 clearSearchBtn.addEventListener("click", () => {
     chatSearchInput.value = "";
     clearSearchBtn.style.display = "none";
     chatSearchInput.focus();
     renderSidebar();
+});
+
+document.querySelector(".sidebar-search").addEventListener("click", (e) => {
+    if (e.target !== clearSearchBtn && !clearSearchBtn.contains(e.target)) {
+        chatSearchInput.focus();
+    }
 });
 
 cancelDeleteBtn.addEventListener("click", closeDeleteModal);
@@ -490,13 +504,26 @@ function renderSidebar() {
     const historyList = document.querySelector(".history-list");
     if (!historyList) return;
     
+    // Save scroll position
+    const currentScroll = historyList.scrollTop;
+    
     historyList.innerHTML = "";
     
     const query = chatSearchInput.value;
     const visibleChats = filterChats(chatSessions, query);
     
+    if (query.length > 0) {
+        const countHeader = document.createElement("div");
+        countHeader.className = "search-result-count";
+        countHeader.textContent = `${visibleChats.length} chat${visibleChats.length === 1 ? '' : 's'} found`;
+        historyList.appendChild(countHeader);
+    }
+    
     if (visibleChats.length === 0) {
-        historyList.innerHTML = `<div class="empty-search-state">No chats found.</div>`;
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-search-state";
+        emptyState.innerHTML = `No chats found.<br><span style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px; display: inline-block;">Try a different search.</span>`;
+        historyList.appendChild(emptyState);
         return;
     }
     
@@ -507,6 +534,9 @@ function renderSidebar() {
     
     updateActiveChatUI();
     initializeSidebarIcons();
+    
+    // Restore scroll position
+    historyList.scrollTop = currentScroll;
 }
 
 function updateChatTitle(chatId, title) {

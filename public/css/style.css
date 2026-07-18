@@ -243,6 +243,15 @@ body {
     font-style: italic;
 }
 
+.search-result-count {
+    padding: 0 20px 10px 20px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
 .clear-search-btn {
     position: absolute;
     right: 12px;

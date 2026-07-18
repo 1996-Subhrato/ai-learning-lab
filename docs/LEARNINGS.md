@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v5.3.0: Search UX Improvements
+Learned:
+* **DOM State Preservation:** When completely rewriting a container's `innerHTML`, transient state like `scrollTop` is lost. Caching `element.scrollTop` synchronously before the wipe and restoring it immediately after the repaint is a simple, highly effective way to prevent scroll-jumping in lists.
+
 ## v5.2.0: Search Sidebar Integration
 Learned:
 * **Derived State Rendering:** By computing the filtered array *inside* the render function rather than mutating global variables, the application remains highly resilient to state synchronization bugs. The core data remains pristine, and the UI simply reflects a computed projection of it.
