@@ -109,7 +109,7 @@ body {
     gap: 12px;
 }
 
-.btn-secondary, .btn-primary {
+.btn-secondary, .btn-primary, .btn-danger {
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 0.9rem;
@@ -136,6 +136,18 @@ body {
 
 .btn-primary:hover {
     background: var(--accent-hover);
+}
+
+.btn-danger {
+    background: #ff4757;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-danger:hover {
+    background: #ff6b81;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #484f58;

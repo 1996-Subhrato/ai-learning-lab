@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.1.0] - 2026-07-18
+### Added
+- **Delete Confirmation Modal:** Added a dedicated confirmation dialog that intercepts the delete action, asking the user to confirm before proceeding.
+- **Dynamic Context:** The modal clearly displays the specific title of the chat you are about to delete.
+- **UX Enhancements:** Clicking outside the modal or pressing the Escape key safely cancels the deletion process.
+
+
 ## [v4.0.0] - 2026-07-18
 ### Added
 - **Delete UI:** Added a contextual "Delete" action button (trash icon) to all sidebar chat items, right next to the Rename button.

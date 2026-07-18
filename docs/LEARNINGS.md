@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v4.1.0: Delete Confirmation Modal
+Learned:
+* **Destructive UX:** A well-designed destructive confirmation modal must do two things: use alarming colors (solid red) to break the user's automated clicking patterns, and explicitly state *what* is being deleted (by injecting the chat title into the DOM) so the user doesn't accidentally delete the wrong item.
+
 ## v4.0.0: Delete Chat UI
 Learned:
 * **UI Affordances:** When placing multiple actions tightly together in a constrained space (like a sidebar item), leveraging distinct CSS hover states (e.g., standard highlight vs. red danger highlight) is critical for preventing misclicks.

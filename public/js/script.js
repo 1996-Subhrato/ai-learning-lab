@@ -8,6 +8,11 @@ const renameError = document.getElementById("renameError");
 const cancelRenameBtn = document.getElementById("cancelRenameBtn");
 const saveRenameBtn = document.getElementById("saveRenameBtn");
 
+const deleteModal = document.getElementById("deleteModal");
+const deleteModalChatTitle = document.getElementById("deleteModalChatTitle");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+
 const chatSessions = [];
 let currentChatId = null;
 
@@ -189,9 +194,46 @@ renameModal.addEventListener("click", (e) => {
     }
 });
 
+// --- Delete Modal Logic ---
+
+let currentDeleteChatId = null;
+
+function openDeleteModal(chatId, chatTitle) {
+    currentDeleteChatId = chatId;
+    deleteModalChatTitle.textContent = chatTitle;
+    deleteModal.style.display = "flex";
+    deleteModal.setAttribute("aria-hidden", "false");
+}
+
+function closeDeleteModal() {
+    currentDeleteChatId = null;
+    deleteModalChatTitle.textContent = "";
+    deleteModal.style.display = "none";
+    deleteModal.setAttribute("aria-hidden", "true");
+}
+
+function handleDeleteConfirm() {
+    console.log("Delete not implemented yet for chat ID:", currentDeleteChatId);
+    closeDeleteModal();
+}
+
+cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+confirmDeleteBtn.addEventListener("click", handleDeleteConfirm);
+
+deleteModal.addEventListener("click", (e) => {
+    if (e.target === deleteModal) {
+        closeDeleteModal();
+    }
+});
+
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && renameModal.style.display === "flex") {
-        closeRenameModal();
+    if (e.key === "Escape") {
+        if (renameModal.style.display === "flex") {
+            closeRenameModal();
+        }
+        if (deleteModal.style.display === "flex") {
+            closeDeleteModal();
+        }
     }
 });
 
@@ -332,8 +374,7 @@ function createSidebarItem(chat) {
     deleteBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         if (isGenerationInProgress()) return;
-        console.log("Delete Chat placeholder clicked for:", chat.id);
-        // Deletion logic will go here in the next PR
+        openDeleteModal(chat.id, chat.title);
     });
     
     actionsDiv.appendChild(renameBtn);

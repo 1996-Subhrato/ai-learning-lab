@@ -2,6 +2,29 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v4.1.0
+**Date:** 2026-07-18
+**Feature Name:** Delete Confirmation Modal (PR 4.2)
+**Objective:** Replace the placeholder delete interaction with a robust, accessible confirmation modal to ensure users are explicitly warned before a destructive action occurs.
+**Problem Statement:** Deleting a chat is an unrecoverable action. Clicking a small button in a sidebar is prone to misclicks. A secondary confirmation layer is required to intercept the action and request explicit user consent.
+**What Was Implemented:**
+* Added `<div id="deleteModal">` to `index.ejs`, explicitly structured as a dialog (`role="dialog"`, `aria-modal="true"`).
+* The modal dynamically displays the title of the chat targeted for deletion to provide maximum context.
+* Styled a dedicated `.btn-danger` class in `style.css` to render the primary action in solid red (`#ff4757`), contrasting with the neutral 'Cancel' button.
+* Re-wired `script.js` so clicking the sidebar trash icon invokes `openDeleteModal(chat.id, chat.title)`.
+* Built full state management: `closeDeleteModal()`, `handleDeleteConfirm()`, and updated global `Escape` key handling to close whichever modal is currently active.
+**Internal Working:** The delete action caches `currentDeleteChatId` in memory while the modal is open. If the user clicks confirm, it logs the ID (as a placeholder for actual deletion) and clears the state.
+**Architecture Decisions:** Adopted the exact same DOM-overlay structure as the Rename modal to ensure a consistent presentation layer and simplify state logic.
+**Libraries Used:** Lucide (icons), Vanilla JS, CSS.
+**Folder/File Changes:** Modified `views/index.ejs`, `public/js/script.js`, and `public/css/style.css`.
+**Challenges Faced:** None.
+**Solutions:** N/A.
+**Lessons Learned:** Reusing modal UI patterns (backdrop overlay, centered content, escape-key listeners) speeds up development significantly while keeping the UX entirely consistent across different features.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement actual in-memory deletion and LocalStorage persistence updates.
+
+---
+
 ### Version v4.0.0
 **Date:** 2026-07-18
 **Feature Name:** Delete Chat UI (PR 4.1)

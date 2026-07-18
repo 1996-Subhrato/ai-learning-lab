@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v4.1.0 - Phase 4: Delete Confirmation Modal
 * [x] v4.0.0 - Phase 4: Delete Chat UI
 * [x] v3.3.0 - Phase 3: Rename Validation
 * [x] v3.2.0 - Phase 3: Rename State
