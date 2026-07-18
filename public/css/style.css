@@ -259,13 +259,14 @@ body {
     display: none;
     align-items: center;
     flex-shrink: 0;
+    gap: 4px;
 }
 
 .history-item:hover .chat-actions {
     display: flex;
 }
 
-.rename-btn {
+.rename-btn, .delete-btn {
     background: none;
     border: none;
     color: var(--text-secondary);
@@ -273,13 +274,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px;
+    padding: 4px;
     border-radius: 4px;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .rename-btn:hover {
     color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.delete-btn:hover {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
 }
 
 .history-item i {

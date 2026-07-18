@@ -323,7 +323,21 @@ function createSidebarItem(chat) {
         openRenameModal(chat.id, chat.title);
     });
     
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.setAttribute("aria-label", "Delete Chat");
+    deleteBtn.title = "Delete Chat";
+    deleteBtn.innerHTML = `<i data-lucide="trash-2"></i>`;
+    
+    deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (isGenerationInProgress()) return;
+        console.log("Delete Chat placeholder clicked for:", chat.id);
+        // Deletion logic will go here in the next PR
+    });
+    
     actionsDiv.appendChild(renameBtn);
+    actionsDiv.appendChild(deleteBtn);
     
     item.appendChild(titleWrapper);
     item.appendChild(actionsDiv);

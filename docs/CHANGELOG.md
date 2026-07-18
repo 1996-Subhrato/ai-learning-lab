@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.0.0] - 2026-07-18
+### Added
+- **Delete UI:** Added a contextual "Delete" action button (trash icon) to all sidebar chat items, right next to the Rename button.
+- **Danger States:** Implemented specific danger-themed CSS hover states for the delete action to visually distinguish it from safe actions.
+
+
 ## [v3.3.0] - 2026-07-18
 ### Added
 - **Form Validation:** The Rename Modal now strictly rejects empty strings, whitespace-only strings, and submissions that match the current title.

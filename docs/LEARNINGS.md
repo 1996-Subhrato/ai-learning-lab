@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v4.0.0: Delete Chat UI
+Learned:
+* **UI Affordances:** When placing multiple actions tightly together in a constrained space (like a sidebar item), leveraging distinct CSS hover states (e.g., standard highlight vs. red danger highlight) is critical for preventing misclicks.
+
 ## v3.3.0: Rename Validation
 Learned:
 * **UX Micro-Interactions:** A core tenet of modern form validation is that validation errors should be loud when triggered, but disappear instantly when the user attempts a correction. Tying `clearRenameError()` to the native `input` event creates a highly polished, responsive feel.

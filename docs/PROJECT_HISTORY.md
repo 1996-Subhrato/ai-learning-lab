@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v4.0.0
+**Date:** 2026-07-18
+**Feature Name:** Delete Chat UI (PR 4.1)
+**Objective:** Expose a non-destructive delete action for chat sessions within the sidebar to establish the interaction pattern for chat removal.
+**Problem Statement:** Users need a way to clean up old chats, but before implementing data destruction, the UI pattern must be established securely alongside the existing rename action without causing accidental layout shifts.
+**What Was Implemented:**
+* Injected a `.delete-btn` into the `createSidebarItem` DOM generation sequence, positioned directly next to the rename button.
+* Utilized the `trash-2` Lucide icon for clear semantic meaning.
+* Engineered a custom CSS hover state for the delete button utilizing a danger color (`#ff6b6b`) and a soft red background (`rgba(255, 107, 107, 0.1)`) to visually distinguish it from the rename button.
+* Hooked up a placeholder click handler that calls `e.stopPropagation()` and safely logs the intent to the console, entirely preserving application state.
+**Internal Working:** The sidebar generator now outputs two actions per `.history-item`. Both are hidden by default and rely on CSS `.history-item:hover .chat-actions` to appear.
+**Architecture Decisions:** Adopted the exact same inline action pattern used by Rename to guarantee interaction consistency.
+**Libraries Used:** Lucide (icons), Vanilla JS, CSS.
+**Folder/File Changes:** Modified `public/js/script.js` and `public/css/style.css`.
+**Challenges Faced:** Ensuring the addition of a second action icon didn't break text truncation (`text-overflow: ellipsis`). Solved by adding a small flex `gap: 4px` to the action container and tweaking padding.
+**Solutions:** Addressed via CSS Flexbox refinements.
+**Lessons Learned:** Grouping destructive UI actions alongside safe UI actions requires distinct visual states (like red hover backgrounds) to prevent catastrophic misclicks.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement a confirmation modal for chat deletion.
+
+---
+
 ### Version v3.3.0
 **Date:** 2026-07-18
 **Feature Name:** Rename Validation (PR 3.4)
