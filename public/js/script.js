@@ -163,7 +163,7 @@ function renameChat(chatId, newTitle) {
     if (chat) {
         chat.title = newTitle.trim();
         chat.updatedAt = new Date();
-        // Explicitly NOT saving to LocalStorage per PR 3.4
+        saveChatSessions();
         return true;
     }
     return false;
@@ -261,7 +261,7 @@ function deleteChat(chatId) {
         ensureValidActiveChat();
     }
     
-    // Explicitly NOT saving to LocalStorage per PR 4.4 constraints
+    saveChatSessions();
     return true;
 }
 
