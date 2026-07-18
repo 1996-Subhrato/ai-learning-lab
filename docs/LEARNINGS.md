@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.5.0: Regenerate Edge Cases & Hardening
+Learned:
+* **Asynchronous Race Conditions:** When a background process (like an HTTP streaming decoder) mutates application state dynamically over several seconds, any UI mechanisms that allow the user to shift context (e.g., clicking a sidebar to change `currentChatId`) will instantly corrupt the target data structure.
+* **Proactive Defense:** Establishing a strict, global "UI Lock" during generation is often safer and far simpler than attempting to retro-fit complex state reconciliation logic (like verifying `chatId` hashes on every single byte chunk).
+
 ## v1.4.0: Implement Regenerate Response (Streaming Logic)
 Learned:
 * **Workflow Abstraction:** Abstracting the actual networking (`fetch`, `ReadableStream`) away from the user-interaction hooks (`sendMessage`) allows massive features like Regeneration to be built with almost zero new business logic, completely eliminating code duplication and ensuring visual consistency (e.g., error messages and loading states match perfectly).

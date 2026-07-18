@@ -2,6 +2,26 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.5.0
+**Date:** 2026-07-18
+**Feature Name:** Regenerate Edge Cases & Hardening (Regenerate Response Step 1.5)
+**Objective:** Solidify the "Regenerate" and general streaming implementation by explicitly preventing invalid application states and UI bugs during execution.
+**Problem Statement:** Moving away from a simple "Send Message" model to a more complex architecture with multiple chats and regenerative AI responses introduced massive race conditions. For example, a user could click a sidebar chat during an active generation cycle, causing the background `ReadableStream` to inject chunks into an entirely disconnected conversation history. 
+**What Was Implemented:**
+* Added a global `isGenerationInProgress()` helper which strictly evaluates `btn.disabled` as a system-wide execution lock.
+* Inserted guard clauses inside sidebar click listeners (`item.addEventListener("click")`), new chat initialization (`handleNewChat()`), `sendMessage()`, and `regenerateResponse()`.
+**Internal Working:** If any stream is active, the application entirely ignores requests to switch contexts or trigger parallel generations. Additionally, by depending entirely on `hasRegeneratableResponse()`, the regenerate feature intrinsically ignores edge cases where the active conversation only has user messages, or where the last AI message was aborted (and thus technically un-regeneratable).
+**Architecture Decisions:** Opted for proactive UI locking over reactive payload shifting. Rather than tracking active `chatId`s down into the HTTP loop to ensure chunks appended correctly after a mid-stream switch, it is significantly safer and cleaner to simply freeze destructive context switches (like changing chats) until the active stream completes or is explicitly aborted by the user.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Handling race conditions between background fetch loops and frontend context switches.
+**Solutions:** Global stream locking via `isGenerationInProgress()`.
+**Lessons Learned:** Centralized state lock functions are significantly easier to maintain than scattering scattered `btn.disabled` checks, and applying them globally across sidebar actions immediately hardens the entire application against complex asynchronous UI bugs.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Persistent Storage (MongoDB) integration.
+
+---
+
 ### Version v1.4.0
 **Date:** 2026-07-18
 **Feature Name:** Implement Regenerate Response (Streaming Logic)

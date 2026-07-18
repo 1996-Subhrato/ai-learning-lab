@@ -62,6 +62,10 @@ function hasRegeneratableResponse() {
     return getLastAssistantMessage() !== null;
 }
 
+function isGenerationInProgress() {
+    return btn.disabled;
+}
+
 function addMessage(message) {
     const chat = getCurrentChat();
     if (chat) {
@@ -90,6 +94,7 @@ function refreshUI() {
 }
 
 function handleNewChat() {
+    if (isGenerationInProgress()) return;
     const newChat = createChat();
     setCurrentChat(newChat.id);
     refreshUI();
@@ -129,6 +134,7 @@ function createSidebarItem(chat) {
     
     item.innerHTML = `<i data-lucide="message-square"></i> ${chat.title}`;
     item.addEventListener("click", () => {
+        if (isGenerationInProgress()) return;
         setCurrentChat(chat.id);
         refreshUI();
     });
@@ -374,8 +380,8 @@ function createLoadingMessage() {
 }
 
 async function sendMessage() {
-    if (btn.disabled) return;
-
+    if (isGenerationInProgress()) return;
+    
     const text = prompt.value.trim();
     if (!text) return;
 
@@ -403,7 +409,7 @@ async function sendMessage() {
 }
 
 async function regenerateResponse() {
-    if (!hasRegeneratableResponse() || btn.disabled) return;
+    if (!hasRegeneratableResponse() || isGenerationInProgress()) return;
     
     btn.disabled = true;
     btn.style.display = "none";

@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.5.0] - 2026-07-18
+### Added
+- Implemented `isGenerationInProgress()` global safety lock to protect background state mutations.
+### Fixed
+- Fixed critical race condition where users could switch active chats mid-generation, causing the background stream to corrupt the history array of the newly selected chat. Chat switching is now safely ignored until the active generation completes or is aborted.
+- Prevented double-click rapid generation bugs by strictly evaluating `hasRegeneratableResponse()` and `isGenerationInProgress()` locks.
+
+
 ## [v1.4.0] - 2026-07-18
 ### Added
 - Fully functional "Regenerate" workflow allowing users to replace the last assistant response with a newly generated completion.
