@@ -42,8 +42,6 @@ router.post('/chat', async (req, res) => {
                     message: "Message content cannot be empty."
                 });
             }
-
-            msg.content = trimmedContent;
         }
 
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -51,19 +49,30 @@ router.post('/chat', async (req, res) => {
 
         const contents = messages.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: msg.content }]
+            parts: [{ text: msg.content.trim() }]
         }));
 
         const result = await model.generateContentStream({ contents });
 
+        let isDisconnected = false;
+        req.on('close', () => {
+            isDisconnected = true;
+        });
+
         for await (const chunk of result.stream) {
+            if (isDisconnected) {
+                break;
+            }
+
             const text = chunk.text();
             if (text) {
                 res.write(text);
             }
         }
 
-        res.end();
+        if (!isDisconnected) {
+            res.end();
+        }
     } catch (error) {
         console.error("Error in /google/chat route:");
         console.error(error.stack);

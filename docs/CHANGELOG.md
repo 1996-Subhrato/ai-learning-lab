@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.8.2] - 2026-07-18
+### Changed
+- Refactored the loading ("Thinking...") UI into a reusable `createLoadingMessage()` helper using pure DOM APIs.
+- Introduced `complete` metadata to assistant messages in the conversation history.
+- Pre-filtered `fetch` payloads to exclude `complete: false` assistant messages, preventing interrupted, partial text from confusing the AI's context on future turns.
+
+
+## [v0.8.1] - 2026-07-18
+### Changed
+- Preserved user messages in `conversationHistory` upon stream cancellation.
+- Refactored `createAiMessage()` to strictly use pure DOM Node creation APIs, eliminating `innerHTML` and `querySelector` overhead.
+- Centralized the Stop button creation into a reusable element.
+- Removed original request object mutation in backend payload validation.
+
+
+## [v0.8.0] - 2026-07-18
+### Added
+- "Stop Generating" feature utilizing the browser's native `AbortController`.
+- Dynamic Stop button that replaces the Send button during streaming.
+- Backend detection of client disconnects (`req.on('close')`) to halt Gemini stream consumption.
+
+### Changed
+- `fetch` requests now accept an `AbortSignal`.
+- Partially aborted AI responses are now intentionally omitted from `conversationHistory` to prevent context corruption.
+
+
 ## [v0.7.0] - 2026-07-18
 ### Added
 - In-memory conversation history (`conversationHistory` array) on the frontend.

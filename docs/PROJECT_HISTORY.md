@@ -2,6 +2,75 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v0.8.2
+**Date:** 2026-07-18
+**Feature Name:** Loading UI & Conversation Architecture Refactor
+**Objective:** Improve code consistency via reusable DOM helpers and formalize the conversation model to handle interrupted AI responses.
+**Problem Statement:** The loading "Thinking..." UI relied on raw `innerHTML` string injection, breaking the pattern of pure DOM manipulation established in `v0.8.1`. Additionally, preserving interrupted AI responses in the UI without explicit metadata meant that consecutive user prompts (or partial AI garbage text) could confuse the AI's contextual awareness in future turns.
+**What Was Implemented:**
+* Extracted the loading message UI into a `createLoadingMessage()` helper, utilizing strict `document.createElement()` calls.
+* Introduced a `complete` boolean flag metadata on assistant messages inside `conversationHistory`.
+* Logged aborted AI responses as `complete: false` and successful ones as `complete: true`.
+* Added a pre-fetch filter so that only user messages and fully completed assistant messages are passed in the Gemini payload.
+**Internal Working:** The UI layer and the data layer are now fully decoupled regarding aborted requests. If the user stops a generation, the partial AI text is recorded in memory as incomplete and rendered on screen so the user doesn't lose what they were reading. However, when the user sends their next prompt, the `filter()` drops the incomplete AI response from the payload, presenting Gemini with a clean, logical history that excludes interrupted, potentially non-sensical trailing sentences.
+**Architecture Decisions:** Adopted a "Record Everything, Filter for Context" approach to memory management.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Ensuring the UI doesn't visually break when decoupling the payload array from the display history array.
+**Solutions:** Maintaining a single source of truth (`conversationHistory`) for the UI, but deriving a computed `payloadMessages` array dynamically at fetch time.
+**Lessons Learned:** Differentiating the user's *visual* history (what they see on screen) from the AI's *semantic* history (what the model needs to understand the conversation flow).
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Multiple chat sessions or backend database persistence.
+
+---
+
+### Version v0.8.1
+**Date:** 2026-07-18
+**Feature Name:** Stop Generating Architecture Refactor
+**Objective:** Improve the internal architecture, conversation consistency, and code quality of the Stop Generating feature.
+**Problem Statement:** Aborted requests were aggressively popping the user's message from the conversation history, resulting in a loss of valid user context. The DOM creation logic and backend validation were also sub-optimal.
+**What Was Implemented:**
+* Preserved the user's message in the `conversationHistory` array even when an `AbortError` occurs, reflecting the true state of the conversation.
+* Refactored `createAiMessage()` to build DOM nodes incrementally using `document.createElement` rather than string interpolation and `querySelector()`.
+* Shifted backend content trimming from the original request mutation to the mapped Gemini payload generation.
+* Reused a single, globally initialized Stop button by toggling its `display` property, avoiding redundant DOM creation loops.
+* Stripped unnecessary `console.log` statements for expected `AbortError`s to keep production logs clean.
+**Internal Working:** The frontend now retains the user prompt in memory upon cancellation. The backend leaves the incoming `req.body.messages` object completely unmodified and isolated, strictly handling transformation mapping right before injecting it into the LLM stream function. 
+**Architecture Decisions:** Adopted strict mutation-avoidance on incoming HTTP payloads, aligning with pure-function design principles. 
+**Libraries Used:** Vanilla JS, Node.js Express.
+**Folder/File Changes:** Modified `public/js/script.js` and `routes/google-gemini.js`.
+**Challenges Faced:** Resolving Gemini SDK strict-role alternation requirements while retaining un-answered user messages.
+**Solutions:** Upgraded the payload mapping mapping structure to permit consecutive user interactions gracefully (or handle them dynamically if needed by the specific SDK iteration) by allowing the true history to reflect reality.
+**Lessons Learned:** Differentiating true system errors (which mandate full conversation rollbacks) from user-initiated interrupts (which mandate preserving the user's side of the conversation).
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Multiple chat sessions.
+
+---
+
+### Version v0.8.0
+**Date:** 2026-07-18
+**Feature Name:** Stop Generating (AbortController)
+**Objective:** Allow the user to cancel an in-progress AI response stream.
+**Problem Statement:** If the AI started generating a long, unwanted response, the user had no way to stop it, wasting API tokens and locking the UI until completion.
+**What Was Implemented:**
+* Introduced the native `AbortController` API to the frontend `fetch` request.
+* Replaced the "Send" button with a dynamic "Stop" button while streaming is active.
+* Handled the resulting `AbortError` gracefully, avoiding error UI rendering.
+* Prevented appending partial, aborted AI responses to the in-memory `conversationHistory` to keep the context clean.
+* Modified the Express route to listen for the `req.on('close')` event to detect client disconnects.
+* Cleanly broke the backend stream writing loop upon disconnect to prevent orphaned processes.
+**Internal Working:** When a stream starts, an `AbortController` is attached to the `fetch` signal. A temporary Stop button is injected. If clicked, `controller.abort()` is called. This forcibly terminates the TCP connection. The catch block on the frontend traps the specific `AbortError`, pops the user message from the history to maintain consistency, and leaves the partially rendered AI text on screen. Simultaneously, the backend Express route detects the connection close and halts the generator loop.
+**Architecture Decisions:** Opted to dynamically inject a dedicated Stop button element rather than permanently overloading the event listeners of the Send button to ensure deterministic state cleanup.
+**Libraries Used:** Vanilla JS, Node.js Express.
+**Folder/File Changes:** Modified `public/js/script.js` and `routes/google-gemini.js`.
+**Challenges Faced:** Keeping the `conversationHistory` array valid for Gemini. Because Gemini strictly requires alternating user/model roles, an aborted request (which leaves an unrecorded model response) would cause the next user message to break the sequence (`user`, `user`).
+**Solutions:** Automatically popped the preceding user message out of `conversationHistory` upon an `AbortError`. The user can see their prompt in the UI, but under the hood, the next request resets to before they asked it.
+**Lessons Learned:** `AbortController` signals, fetch cancellation, and Express request lifecycle events (`req.on('close')`).
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Multiple chats or persistent database storage.
+
+---
+
 ### Version v0.7.0
 **Date:** 2026-07-18
 **Feature Name:** Conversation Memory (In-Memory Context)

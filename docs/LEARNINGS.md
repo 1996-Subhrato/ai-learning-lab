@@ -2,6 +2,21 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v0.8.2: Loading UI & Conversation Architecture
+Learned:
+* **Visual vs. Contextual History:** The conversation history displayed to a user does not have to perfectly mirror the payload sent to an AI. Interrupted, partial assistant responses should remain visible on screen for UX purposes, but must be explicitly excluded from future LLM payloads to prevent contextual drift and hallucination caused by trailing, incomplete sentences.
+
+## v0.8.1: Stop Generating Refactor
+Learned:
+* State mutations (`msg.content = msg.content.trim()`) on raw request objects should be avoided to preserve the integrity of the original payload for logging, debugging, or downstream middleware.
+* Expected user actions (like cancelling a stream) should not be treated or logged identically to unhandled runtime exceptions.
+
+## v0.8.0: Stop Generating (AbortController)
+Learned:
+* `AbortController` and `AbortSignal` provide a native way to cancel ongoing `fetch` requests in the browser without third-party dependencies.
+* Calling `controller.abort()` throws a DOMException with `name === 'AbortError'`, which must be trapped explicitly to prevent standard error UI behaviors.
+* When a frontend fetch is aborted, the backend Express `req` object emits a `close` event, allowing the server to gracefully exit generator loops and save resources.
+
 ## v0.7.0: Conversation Memory
 Learned:
 * LLMs (Large Language Models) are naturally stateless. Providing a memory feature requires explicitly re-submitting the entire previous dialogue string/array on every new turn.
