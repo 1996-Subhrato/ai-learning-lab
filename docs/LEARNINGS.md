@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v2.2.0: Persist Current Chat
+Learned:
+* **Bidirectional Bootstrapping:** When an application detects corrupted or missing references during initialization (like a missing foreign key mapping), simply mapping the user to a fallback state in memory isn't enough. The application must flush that fallback state back to the persistence layer to permanently cleanse the corruption.
+
 ## v2.1.0: Restore Chat Sessions
 Learned:
 * **Reference Integrity in Document Storage:** Because NoSQL/LocalStorage doesn't enforce foreign key constraints, manual validation is required. Before assuming `currentChatId` points to a real chat, verifying its existence using `Array.prototype.some()` prevents null reference exceptions when the UI attempts to render it.

@@ -2,6 +2,25 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v2.2.0
+**Date:** 2026-07-18
+**Feature Name:** Persist Current Chat (LocalStorage Persistence PR 2.3)
+**Objective:** Guarantee the active chat context (`currentChatId`) is durably synchronized to the persistence layer under all conditions, particularly edge-case restorations.
+**Problem Statement:** While the user's manual navigation clicks were synchronizing the active chat, the initialization block occasionally had to auto-correct orphaned context pointers without committing that auto-correction back to the storage layer, potentially leading to repetitive hydration warnings or desyncs.
+**What Was Implemented:**
+* Added a `saveChatSessions()` write flush inside the `restoreChatSessions()` array fallback block.
+**Internal Working:** Whenever the application restarts, it cross-references the saved `currentChatId` against the loaded arrays. If the pointer is invalid, the engine forces the user into `chatSessions[0].id`. Crucially, it now instantly flushes this correction back to the storage engine via `saveChatSessions()`. Any other programmatic or manual chat switching safely runs through the bottlenecked `setCurrentChat()` method which handles saving natively.
+**Architecture Decisions:** Enforced strict "Single Source of Truth" validation. The application only permits mutations to `currentChatId` if immediately followed by a downstream payload save.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** None, the core architecture previously laid down correctly centralized mutations.
+**Solutions:** A single line injection of `saveChatSessions()`.
+**Lessons Learned:** Validating state on boot requires bidirectional flow; if the boot layer fixes corrupted data, it should write those fixes back so the corruption doesn't linger invisibly on disk.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Cloud persistence (MongoDB).
+
+---
+
 ### Version v2.1.0
 **Date:** 2026-07-18
 **Feature Name:** Restore Chat Sessions (LocalStorage Persistence PR 2.2)

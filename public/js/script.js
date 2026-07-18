@@ -37,6 +37,7 @@ function restoreChatSessions() {
                     currentChatId = data.currentChatId;
                 } else {
                     currentChatId = chatSessions[0].id;
+                    saveChatSessions();
                 }
                 
                 return true;

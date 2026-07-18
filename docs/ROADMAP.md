@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v2.2.0 - Phase 2: Persist Current Chat
 * [x] v2.1.0 - Phase 2: Restore Chat Sessions
 * [x] v2.0.0 - Phase 2: Save Chat Sessions (LocalStorage Persistence)
 * [x] v1.5.0 - Regenerate Response (Step 5 - Edge Cases & Hardening)
