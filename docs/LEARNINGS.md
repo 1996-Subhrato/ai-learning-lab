@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v5.1.0: Search Filter Helper
+Learned:
+* **Pure Functions:** Decoupling logic into pure functions (`filterChats`) prevents state mutation bugs. If the function is guaranteed to return a new array and not touch the global `chatSessions`, it's infinitely safer to wire into aggressive UI events like `onInput`.
+
 ## v5.0.0: Search UI
 Learned:
 * **Input Icon Layouts:** Wrapping an `<input>` in a `relative` container and using `absolute` positioning for icons (with compensatory padding on the input itself) is the most robust way to build custom search bars without relying on brittle background-image hacks.

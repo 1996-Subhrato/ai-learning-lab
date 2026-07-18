@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v5.1.0
+**Date:** 2026-07-18
+**Feature Name:** Search Filter Helper (PR 5.2)
+**Objective:** Implement the core pure-function logic required to filter chat histories before hooking it up to the DOM.
+**Problem Statement:** Searching chats requires iterating over the array and matching strings. Embedding this logic directly into a UI event listener tightly couples the data layer to the presentation layer, making it harder to test, reuse, or extend (e.g., searching by date later).
+**What Was Implemented:**
+* Built `filterChats(chatsCollection, query)`, a completely pure helper function in `script.js`.
+* The function accepts the search array and query string as inputs and returns a brand-new filtered array without modifying the original inputs.
+* Implemented partial, case-insensitive string matching (`.toLowerCase().includes()`) specifically targeting the `chat.title` property.
+* Engineered resilient edge-case handling: the function gracefully returns the unmodified original array if the query is empty, null, undefined, or whitespace-only.
+**Internal Working:** The function first sanitizes the query via `.trim().toLowerCase()`. If valid, it leverages `Array.prototype.filter()` to generate the resulting collection, preserving the exact original ordering of matches.
+**Architecture Decisions:** Adopted functional programming principles (pure functions, no side effects, immutability) to ensure the search logic is perfectly isolated and predictable.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** None.
+**Solutions:** N/A.
+**Lessons Learned:** Pure functions act as an excellent firewall between application state and UI logic. By writing `filterChats` independently, we guarantee that the original `chatSessions` array cannot be accidentally mutilated during a complex search operation.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Connect the search input to the sidebar rendering engine using this helper.
+
+---
+
 ### Version v5.0.0
 **Date:** 2026-07-18
 **Feature Name:** Search UI (PR 5.1)

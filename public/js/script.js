@@ -285,6 +285,17 @@ function handleDeleteConfirm() {
 
 // --- Search UI Logic ---
 
+function filterChats(chatsCollection, query) {
+    if (!query || typeof query !== "string") return chatsCollection;
+    
+    const trimmedQuery = query.trim().toLowerCase();
+    if (trimmedQuery === "") return chatsCollection;
+    
+    return chatsCollection.filter(chat => 
+        chat.title.toLowerCase().includes(trimmedQuery)
+    );
+}
+
 chatSearchInput.addEventListener("input", () => {
     if (chatSearchInput.value.length > 0) {
         clearSearchBtn.style.display = "flex";
