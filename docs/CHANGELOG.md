@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v7.3.0] - 2026-07-18
+### Added
+- **Chat Repository:** Implemented `repositories/chatRepository.js` providing dedicated, parameterized data access methods (`createChat`, `getChats`, `getChatById`, `renameChat`, `deleteChat`) for the PostgreSQL `chats` table.
+- **Repository Refinements:** Hardened data access by replacing all `SELECT *` patterns with explicit column projections, implemented deterministic sorting, and locked the module interface via `Object.freeze()`.
+
 ## [v7.2.0] - 2026-07-18
 ### Added
 - **Database Schema:** Created the initial PostgreSQL schema in `database/schema.sql` defining the `chats` and `messages` tables.

@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v7.3.0
+**Date:** 2026-07-18
+**Feature Name:** Chat Repository (PR 3.4)
+**Objective:** Create a dedicated data access layer (Repository Pattern) responsible for all database operations related to chats, completely decoupled from HTTP routes and business logic.
+**Problem Statement:** To safely migrate away from `LocalStorage`, the application needs a secure, predictable way to perform CRUD operations on the `chats` table without leaking SQL queries into the controller layer.
+**What Was Implemented:**
+* **Chat Repository Module:** Authored `repositories/chatRepository.js` exposing 5 core database wrapper methods explicitly frozen via `Object.freeze()`.
+* **Explicit Projections:** Replaced lazy `SELECT *` and `RETURNING *` clauses with strict column declarations (`id, title, created_at, updated_at`) to prevent future schema leaks.
+* **Parameterized SQL:** All methods (`createChat`, `getChats`, `getChatById`, `renameChat`, `deleteChat`) exclusively use parameterized `$1, $2` variables, comprehensively preventing SQL injection attacks.
+* **Separation of Concerns:** The repository strictly returns raw Javascript objects or null values. It never interacts with Express `req`/`res` objects, and it delegates error catching back to the caller.
+**Internal Working:** The module imports the `db.query()` abstraction from `config/db.js`. Functions guarantee deterministic results (e.g., sorting by `updated_at DESC, created_at DESC`).
+**Architecture Decisions:** Adopted the strict Repository Pattern. By forcing all SQL queries regarding chats into this single file, any future database restructuring only requires updating this isolated module rather than hunting down queries scattered across the application.
+**Libraries Used:** PostgreSQL driver (`pg`).
+**Folder/File Changes:** Created `repositories/chatRepository.js`.
+**Challenges Faced:** Ensuring errors bubble up correctly without unnecessary duplicate try/catch blocks.
+**Solutions:** Omitted localized `try/catch` wrappers within the repository methods, allowing native database promise rejections to naturally flow upwards to the business layer.
+**Lessons Learned:** Returning primitives (booleans for deletion, null for not-found) from the repository layer keeps the API extremely clean and pushes HTTP status code logic into the controllers where it belongs.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement the Message Repository (PR 3.5).
+
+---
+
 ### Version v7.2.0
 **Date:** 2026-07-18
 **Feature Name:** Create Database Tables (PR 3.3)
