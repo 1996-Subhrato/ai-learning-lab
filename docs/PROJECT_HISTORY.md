@@ -2,6 +2,27 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.4.0
+**Date:** 2026-07-18
+**Feature Name:** Implement Regenerate Response (Streaming Logic)
+**Objective:** Fully activate the Regenerate button by rolling back the last assistant completion, rebuilding the API payload, and fetching a fresh stream.
+**Problem Statement:** Implementing regenerate requires nearly identical networking, loading, UI rendering, error handling, and abort controller logic as standard message sending. Simply duplicating `sendMessage()` would have resulted in roughly 150 lines of duplicate code, making maintenance a nightmare.
+**What Was Implemented:**
+* Abstracted the entirety of the `fetch()` and `ReadableStream` decoding loop out of `sendMessage()` into a generic `streamChatResponse(payloadMessages, isRegenerate)` helper.
+* Wrote `regenerateResponse()` which leverages `hasRegeneratableResponse()`, splices the final assistant node off the `chat.messages` array, triggers a fast UI re-render (causing the bad response to instantly vanish), and then kicks off `streamChatResponse()`.
+* Bound the new logic to the previously inert Regenerate button click listener.
+**Internal Working:** When Regenerate is clicked, the app locks the UI inputs, locates the index of the final assistant message (via the `getLastAssistantMessageIndex()` helper), deletes it, and instantly repaints the screen. It then computes a fresh API payload up to the point of the deletion. Finally, it delegates execution to the abstracted `streamChatResponse()` which identically handles loading indicators, chunk streaming, error states, and abort signals.
+**Architecture Decisions:** Used a boolean `isRegenerate` flag inside the streaming abstraction. Standard message failures need to rollback the trailing *user* message from state, but if a regenerate fails, the user message must remain untouched. 
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Handling error state rollbacks correctly depending on context.
+**Solutions:** Bypassed `rollbackLastMessage()` in the `catch` block if `isRegenerate === true`.
+**Lessons Learned:** Modularizing large orchestrator functions piece-by-piece (payload building, DOM querying) drastically simplifies final feature implementation. `regenerateResponse()` ended up being fewer than 20 lines of code because all heavy lifting was pre-abstracted.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Persistent Storage (MongoDB) integration.
+
+---
+
 ### Version v1.3.2
 **Date:** 2026-07-18
 **Feature Name:** Add Regenerate State Helpers (Regenerate Response Step 1.3)

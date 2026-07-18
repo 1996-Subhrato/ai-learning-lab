@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.4.0: Implement Regenerate Response (Streaming Logic)
+Learned:
+* **Workflow Abstraction:** Abstracting the actual networking (`fetch`, `ReadableStream`) away from the user-interaction hooks (`sendMessage`) allows massive features like Regeneration to be built with almost zero new business logic, completely eliminating code duplication and ensuring visual consistency (e.g., error messages and loading states match perfectly).
+* **Contextual Error Handling:** Shared network helpers need contextual awareness (e.g., `isRegenerate` flags). A standard chat failure requires tearing down the user's latest message, while a regeneration failure requires keeping the user's historic message intact.
+
 ## v1.3.2: Add Regenerate State Helpers
 Learned:
 * **Semantic Array Queries:** Relying on `findLastIndex` wrapped in descriptively named helpers (`getLastUserMessage`) is significantly more robust than hardcoding arbitrary array offsets (`length - 1`), especially as the state shape evolves to support dynamic injections (like system prompts or UI state indicators).

@@ -308,7 +308,7 @@ function renderRegenerateButton(container) {
     regenBtn.innerHTML = `<i data-lucide="refresh-cw"></i> Regenerate`;
     
     regenBtn.addEventListener("click", () => {
-        console.log("Regenerate clicked");
+        regenerateResponse();
     });
     
     container.appendChild(regenBtn);
@@ -399,8 +399,41 @@ async function sendMessage() {
     messages.scrollTop = messages.scrollHeight;
 
     const payloadMessages = buildConversationPayload();
+    await streamChatResponse(payloadMessages, false);
+}
 
+async function regenerateResponse() {
+    if (!hasRegeneratableResponse() || btn.disabled) return;
+    
+    btn.disabled = true;
+    btn.style.display = "none";
+    stopBtn.style.display = "";
+    
+    currentController = new AbortController();
+    
+    const lastAssistantIndex = getLastAssistantMessageIndex();
+    if (lastAssistantIndex !== -1) {
+        const chat = getCurrentChat();
+        if (chat) {
+            chat.messages.splice(lastAssistantIndex, 1);
+            chat.updatedAt = new Date();
+        }
+    }
+    
+    renderCurrentConversation();
+    
+    const payloadMessages = buildConversationPayload();
+    await streamChatResponse(payloadMessages, true);
+}
+
+async function streamChatResponse(payloadMessages, isRegenerate = false) {
+    let accumulatedText = "";
+    let loading = null;
+    
     try {
+        loading = createLoadingMessage();
+        messages.scrollTop = messages.scrollHeight;
+
         const response = await fetch("/google/chat", {
             method: "POST",
             headers: {
@@ -422,7 +455,6 @@ async function sendMessage() {
         const decoder = new TextDecoder("utf-8");
 
         let aiResponseDiv = null;
-        let accumulatedText = "";
 
         while (true) {
             const { done, value } = await reader.read();
@@ -490,7 +522,7 @@ async function sendMessage() {
 
     } catch (error) {
         if (error.name === 'AbortError') {
-            if (loading.parentNode) loading.remove();
+            if (loading && loading.parentNode) loading.remove();
             
             if (accumulatedText) {
                 addMessage({
@@ -503,9 +535,11 @@ async function sendMessage() {
             messages.scrollTop = messages.scrollHeight;
         } else {
             console.error("Streaming error:", error);
-            if (loading.parentNode) loading.remove();
+            if (loading && loading.parentNode) loading.remove();
             
-            rollbackLastMessage(); // Rollback user message
+            if (!isRegenerate) {
+                rollbackLastMessage(); // Rollback user message only if it's a new message
+            }
             
             const errorResponseDiv = createAiMessage();
             errorResponseDiv.className = "ai-response ai-error";

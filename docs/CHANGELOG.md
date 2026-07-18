@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0] - 2026-07-18
+### Added
+- Fully functional "Regenerate" workflow allowing users to replace the last assistant response with a newly generated completion.
+### Changed
+- Major abstraction of the core chat loop: Extracted streaming HTTP request, chunk decoding, and DOM mutation lifecycle out of `sendMessage()` into a reusable `streamChatResponse()` function.
+
+
 ## [v1.3.2] - 2026-07-18
 ### Added
 - Pure, read-only state helpers to deterministically query conversation structure (`getLastAssistantMessage`, `getLastAssistantMessageIndex`, `getLastUserMessage`, `hasRegeneratableResponse`).

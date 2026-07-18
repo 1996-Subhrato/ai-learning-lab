@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v1.4.0 - Regenerate Response (Step 4 - API Logic)
 * [x] v1.3.2 - Regenerate Response (Step 3 - State Query Architecture)
 * [x] v1.3.1 - Regenerate Response (Step 2 - Payload Architecture Refactor)
 * [x] v1.3.0 - Regenerate Response (Step 1 - UI)
@@ -24,7 +25,6 @@
 ## In Progress
 
 ## Planned
-* [ ] Regenerate Response (Step 4 - API Logic)
 * [ ] Persistent Storage (MongoDB)
 * Multiple Chats
 * Authentication
