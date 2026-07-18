@@ -41,6 +41,27 @@ function buildConversationPayload() {
     return getCurrentMessages().filter(msg => msg.role === 'user' || msg.complete);
 }
 
+function getLastAssistantMessageIndex() {
+    const messages = getCurrentMessages();
+    return messages.findLastIndex(msg => msg.role === 'assistant');
+}
+
+function getLastAssistantMessage() {
+    const messages = getCurrentMessages();
+    const index = messages.findLastIndex(msg => msg.role === 'assistant' && msg.complete);
+    return index !== -1 ? messages[index] : null;
+}
+
+function getLastUserMessage() {
+    const messages = getCurrentMessages();
+    const index = messages.findLastIndex(msg => msg.role === 'user');
+    return index !== -1 ? messages[index] : null;
+}
+
+function hasRegeneratableResponse() {
+    return getLastAssistantMessage() !== null;
+}
+
 function addMessage(message) {
     const chat = getCurrentChat();
     if (chat) {

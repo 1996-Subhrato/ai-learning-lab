@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.3.2: Add Regenerate State Helpers
+Learned:
+* **Semantic Array Queries:** Relying on `findLastIndex` wrapped in descriptively named helpers (`getLastUserMessage`) is significantly more robust than hardcoding arbitrary array offsets (`length - 1`), especially as the state shape evolves to support dynamic injections (like system prompts or UI state indicators).
+
 ## v1.3.1: Build Conversation Payload Helper
 Learned:
 * **Separation of Concerns:** Preparing API payload objects is fundamentally a business logic responsibility, not an orchestration or networking responsibility. Extracting pure data-transformation functions from network executors (like `sendMessage`) aggressively prevents code duplication when scaling complex features like Regenerate or Branching conversations.
