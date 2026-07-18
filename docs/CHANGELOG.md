@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.0] - 2026-07-18
+### Added
+- Native frontend stream consumption using Fetch API's `ReadableStream`.
+- Real-time UI updates, appending text chunks to the chat bubble as they arrive.
+- Real-time Markdown rendering and syntax highlighting during the stream.
+
+### Changed
+- Replaced synchronous `response.json()` consumption with `response.body.getReader()`.
+- The loading spinner is now removed immediately upon receiving the first byte of data.
+
+
 ## [v0.5.0] - 2026-07-18
 ### Added
 - Backend streaming implementation for Gemini responses (`generateContentStream`).

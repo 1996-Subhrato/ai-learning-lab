@@ -2,6 +2,12 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v0.6.0: Streaming Responses (Frontend)
+Learned:
+* The native Fetch API exposes `response.body.getReader()`, which returns a `ReadableStreamDefaultReader` for chunk-by-chunk processing.
+* Using `TextDecoder` to properly convert `Uint8Array` stream chunks into UTF-8 text.
+* Managing DOM states effectively: rendering markdown incrementally by holding an accumulated string to prevent broken HTML structures mid-stream.
+
 ## v0.5.0: Streaming Responses (Backend)
 Learned:
 * Using `generateContentStream` to process AI responses in real-time.

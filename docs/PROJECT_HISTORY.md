@@ -2,6 +2,30 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v0.6.0
+**Date:** 2026-07-18
+**Feature Name:** Frontend Streaming Responses (Step 2)
+**Objective:** Consume the backend HTTP stream and display the AI response in real-time within the chat UI.
+**Problem Statement:** The backend was streaming chunks, but the frontend still attempted to parse a single JSON payload via `await response.json()`, causing errors and breaking the chat.
+**What Was Implemented:**
+* Refactored the `fetch()` handler to use the native `ReadableStream` API via `response.body.getReader()`.
+* Utilized `TextDecoder` to parse the streamed byte chunks into readable strings.
+* Modified the DOM manipulation to create exactly one AI message container and continuously append text to it.
+* Triggered the `marked.parse` and `hljs.highlightElement` functions on every chunk arrival.
+* Auto-scroll behavior tied to chunk streaming.
+* Removed the loading spinner the moment the first chunk arrives instead of waiting for the full response.
+**Internal Working:** The `fetch` call reads the body incrementally using a `while(true)` loop until the `done` flag is true. The accumulated string is re-rendered via the Markdown parser on every tick and injected into the DOM.
+**Architecture Decisions:** Used pure vanilla JavaScript (Fetch API, ReadableStream) instead of third-party libraries (like Axios or Socket.io) to keep the frontend bundle completely zero-dependency and lightweight.
+**Libraries Used:** Built-in Fetch API, `marked`, `highlight.js`.
+**Folder/File Changes:** Modified `public/js/script.js`.
+**Challenges Faced:** Ensuring Markdown was parsed correctly as partial chunks arrived without breaking syntax highlighting.
+**Solutions:** Stored the continuously growing response in an `accumulatedText` variable, and passed the entirely accumulated string to the parser on each tick to ensure proper HTML structures were formed.
+**Lessons Learned:** Native browser stream consumption, `TextDecoder`, and DOM update efficiency.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Conversation memory and preserving chat history.
+
+---
+
 ### Version v0.5.0
 **Date:** 2026-07-18
 **Feature Name:** Streaming Responses (Step 1 - Backend)
