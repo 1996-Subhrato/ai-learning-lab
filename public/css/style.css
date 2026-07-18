@@ -151,7 +151,7 @@ body {
     color: var(--text-secondary);
 }
 
-.history-item:hover {
+.history-item:hover, .history-item.active {
     background: var(--bg-hover);
 }
 

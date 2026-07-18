@@ -2,6 +2,50 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.0.1
+**Date:** 2026-07-18
+**Feature Name:** Functional Sidebar Architecture Refactor
+**Objective:** De-duplicate DOM logic and streamline UI state synchronization before proceeding to AI-generated titles.
+**Problem Statement:** Following the implementation of the functional sidebar in `v1.0.0`, several architectural smells emerged: `renderSidebar()` became a monolithic function handling layout, stylings, and event loops. Markdown processing was copy-pasted across streaming loops and retroactive rendering loops.
+**What Was Implemented:**
+* Fragmented `renderSidebar()` into distinct single-responsibility helpers: `createSidebarItem()`, `updateActiveChatUI()`, and `initializeSidebarIcons()`.
+* Replaced inline JS styling (`element.style`) with native CSS class toggling (`.active`).
+* Consolidated all DOM wipes and renders under a unified `refreshUI()` orchestrator.
+* Extracted the `marked.parse()` and `hljs` highlighting pipeline into a universal `renderMarkdown(container, text)` helper.
+**Internal Working:** The UI now updates through a highly normalized pipeline. Whenever a state change occurs (e.g., clicking New Chat or swapping sessions), the script simply calls `refreshUI()`, which blindly drops and reconstructs the sidebar list and chat pane natively.
+**Architecture Decisions:** Shifting UI logic entirely to CSS `.active` classes enforces separation of concerns—JavaScript dictates *state*, CSS dictates *presentation*. Extracting `renderMarkdown` guarantees that rendering a complete array behaves identically to rendering a live HTTP chunk stream.
+**Libraries Used:** Vanilla JS, Marked.js, Highlight.js.
+**Folder/File Changes:** Modified `public/css/style.css` and `public/js/script.js`.
+**Challenges Faced:** N/A (Standard Refactoring).
+**Solutions:** N/A.
+**Lessons Learned:** Monolithic UI functions are anti-patterns in vanilla JavaScript. Breaking rendering routines down to the smallest possible unit (e.g., `clearConversation()`) vastly reduces cognitive load and eliminates edge cases where one chunk of UI updates while another stalls.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** AI Generated Chat Titles.
+
+---
+
+### Version v1.0.0
+**Date:** 2026-07-18
+**Feature Name:** Functional Sidebar (Chat Sessions Step 2)
+**Objective:** Connect the previously implemented in-memory `chatSessions` architecture to the UI, allowing users to spawn and toggle between multiple disjointed chat threads seamlessly.
+**Problem Statement:** Despite the internal data model supporting multiple chats, the visual interface still operated as a single-thread monolith with hardcoded dummy sidebar items. Users could not visually partition their context.
+**What Was Implemented:**
+* Purged hardcoded mockup chats from `views/index.ejs`.
+* Implemented `renderSidebar()` to dynamically iterate over `chatSessions` and inject interactive `.history-item` nodes.
+* Attached listeners to the "New Chat" buttons to mint fresh sessions and instantly switch focus to them.
+* Built the `renderCurrentConversation()` and `renderMessage()` helpers to reconstruct the UI purely from the selected array in state, retaining syntax highlighting and markdown format upon restoration.
+**Internal Working:** The UI is now completely state-driven. When a user clicks a sidebar item, `currentChatId` updates, `#messages` is wiped clean, and the engine loops through the selected session's `messages` array, passing each object through pure DOM generation functions before dumping them into the chat pane.
+**Architecture Decisions:** Extracted `createUserMessage()` to join `createAiMessage()`, ensuring absolute zero DOM duplication across active streaming versus retroactive rendering.
+**Libraries Used:** Vanilla JS.
+**Folder/File Changes:** Modified `views/index.ejs` and `public/js/script.js`.
+**Challenges Faced:** Restoring AI responses identically to their streamed equivalents.
+**Solutions:** Bypassing `innerHTML +=` and manually passing restored text chunks through the identical `marked.parse()` and `hljs.highlightElement()` pipelines.
+**Lessons Learned:** A unidirectional data flow (State -> Render) minimizes UI bugs and simplifies complex transitions like swapping out an entire DOM sub-tree on a button click.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** AI-generated Chat Titles.
+
+---
+
 ### Version v0.9.1
 **Date:** 2026-07-18
 **Feature Name:** Chat Sessions Architecture Refactor

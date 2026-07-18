@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.1] - 2026-07-18
+### Changed
+- Centralized UI synchronization via `refreshUI()`.
+- Extracted Markdown rendering into the reusable `renderMarkdown()` helper, eliminating duplication between the streaming logic and historical conversation loads.
+- Replaced inline JavaScript DOM styling with strict CSS `.active` class application for sidebar highlights.
+- De-structured `renderSidebar()` into atomic helpers (`createSidebarItem`, `updateActiveChatUI`).
+
+
+## [v1.0.0] - 2026-07-18
+### Added
+- Fully functional chat sidebar driven dynamically by the `chatSessions` state array.
+- Ability to create multiple concurrent "New Chat" threads and swap between them seamlessly without losing history.
+- Pure DOM rendering orchestrators (`renderSidebar`, `renderCurrentConversation`, `renderMessage`, `createUserMessage`) establishing a unidirectional UI flow.
+
+
 ## [v0.9.1] - 2026-07-18
 ### Changed
 - Replaced insecure `Date.now()` chat ID generation with standard `crypto.randomUUID()`.

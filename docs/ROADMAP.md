@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Completed
+* [x] v1.0.0 - Chat Sessions Architecture (Step 2 - Sidebar UI)
+* [x] v0.9.1 - Chat Sessions Architecture (Step 1 - Data Model Refactor)
 * [x] v0.9.0 - Chat Sessions Architecture (Step 1 - Data Model)
 * [x] v0.8.0 - Stop Generating (AbortController)
 * [x] v0.7.0 - Conversation Memory
@@ -14,7 +16,7 @@
 ## In Progress
 
 ## Planned
-* [ ] Chat Sessions (Step 2 - Sidebar UI)
+* [ ] Chat Sessions (Step 3 - AI Generated Titles)
 * Multiple Chats
 * Authentication
 * MongoDB

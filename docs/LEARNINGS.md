@@ -2,6 +2,15 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.0.1: Functional Sidebar Architecture Refactor
+Learned:
+* **Separation of Presentation and Logic:** Inline styling applied via JS (`item.style.backgroundColor`) is an anti-pattern that couples logic and design. Native CSS class toggling (`classList.add("active")`) respects this boundary and relies on the stylesheet for rendering intent.
+* **Unified UI Refreshing:** Having a single entry point (`refreshUI`) to synchronize the screen with memory arrays eliminates out-of-sync visual bugs.
+
+## v1.0.0: Functional Sidebar (Chat Sessions Step 2)
+Learned:
+* **State-Driven UI:** Decoupling the DOM from the application state is critical for scaling interactive apps. By ensuring that the DOM is merely a *reflection* of `chatSessions`—rather than the *storage* of it—swapping between active chats becomes a trivial `wipe and re-render` loop instead of complex node caching.
+
 ## v0.9.1: Chat Sessions Architecture Refactor
 Learned:
 * **UUIDs:** `crypto.randomUUID()` is a globally available Web API in modern browsers (and Node.js). It is vastly superior to `Date.now()` or `Math.random()` for generating unique, collision-proof database keys for objects.
