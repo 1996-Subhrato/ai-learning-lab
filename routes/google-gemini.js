@@ -6,26 +6,34 @@ const router = express.Router();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash"
+    model: process.env.GEMINI_MODEL
 });
 
 router.post('/chat', async (req, res) => {
     try {
         const { prompt } = req.body;
 
-        const result = await model.generateContent(prompt);
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.setHeader('Transfer-Encoding', 'chunked');
 
-        res.json({
-            success: true,
-            response: result.response.text()
-        });
+        const result = await model.generateContentStream(prompt);
+
+        for await (const chunk of result.stream) {
+            res.write(chunk.text());
+        }
+
+        res.end();
     } catch (error) {
         console.error("Error in /google/chat route: ", error.message);
 
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        if (!res.headersSent) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        } else {
+            res.end();
+        }
     }
 });
 

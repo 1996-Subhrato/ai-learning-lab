@@ -2,8 +2,30 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v0.5.0
+**Date:** 2026-07-18
+**Feature Name:** Streaming Responses (Step 1 - Backend)
+**Objective:** Modify the backend to stream AI responses as they are generated rather than waiting for the entire response.
+**Problem Statement:** The previous implementation buffered the entire AI response before sending it to the client, leading to long loading times.
+**What Was Implemented:**
+* Replaced `generateContent` with `generateContentStream` from the Gemini SDK.
+* Implemented HTTP chunked transfer encoding (`Transfer-Encoding: chunked`).
+* Streamed text chunks to the Express response stream using `res.write()`.
+* Added robust error handling to safely close the stream if an error occurs mid-generation.
+**Internal Working:** The `/google/chat` Express route now iterates over the async stream returned by Gemini. For each chunk received, the text is immediately forwarded to the client. The response is explicitly closed with `res.end()` once generation completes.
+**Architecture Decisions:** Opted for simple HTTP chunked transfer for this step to keep the integration lightweight, laying the groundwork for full SSE (Server-Sent Events) or raw stream processing on the frontend later.
+**Libraries Used:** Express, @google/generative-ai
+**Folder/File Changes:** Modified `routes/google-gemini.js`.
+**Challenges Faced:** Handling errors gracefully once the HTTP headers have already been sent to the client.
+**Solutions:** Added a check for `res.headersSent` to decide whether to return a JSON 500 error or simply terminate the active stream.
+**Lessons Learned:** Node.js HTTP response streaming, async iterators in JavaScript, and Gemini's streaming API.
+**Screenshots Placeholder:** N/A (Backend only change)
+**Next Improvements:** Implement the frontend logic to consume this stream.
+
+---
+
 ### Version v0.4.0
-**Date:** 2024-05-15
+**Date:** 2026-07-18
 **Feature Name:** Modern Chat UI
 **Objective:** Upgrade the chat interface to a modern, responsive layout similar to ChatGPT/Claude.
 **Problem Statement:** The basic chat page was functional but lacked polish, making it feel less like a production app.
@@ -27,7 +49,7 @@ This file serves as a complete development journal for the project. New features
 ---
 
 ### Version v0.3.0
-**Date:** 2024-05-10
+**Date:** 2026-07-12
 **Feature Name:** Response Rendering
 **Objective:** Format the AI's markdown responses into readable HTML with syntax highlighting.
 **Problem Statement:** Raw markdown from the AI API was being displayed as plain text, making code blocks unreadable.
@@ -51,7 +73,7 @@ This file serves as a complete development journal for the project. New features
 ---
 
 ### Version v0.2.0
-**Date:** 2024-05-05
+**Date:** 2026-07-09
 **Feature Name:** AI Chat Flow
 **Objective:** Create the core chat loop between the frontend user interface and the AI API.
 **Problem Statement:** The server was set up but lacked a user interface to actually send prompts and see responses.
@@ -75,7 +97,7 @@ This file serves as a complete development journal for the project. New features
 ---
 
 ### Version v0.1.0
-**Date:** 2024-05-01
+**Date:** 2026-07-05
 **Feature Name:** Initial Project Setup
 **Objective:** Initialize the Node.js project and configure the server and AI SDKs.
 **Problem Statement:** Needed a foundational backend setup to interact with Google Gemini and OpenAI APIs securely.

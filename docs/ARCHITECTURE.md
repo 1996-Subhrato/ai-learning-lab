@@ -21,18 +21,17 @@ Browser
 ↓
 Fetch API (Frontend JS)
 ↓
-Express Route (`/google`)
+Express Route (`/google/chat`)
 ↓
-AI Service Layer
+Gemini Streaming API
 ↓
-Gemini API
+Receive Chunk
 ↓
-Text Response (JSON)
+Write Chunk to Response (`res.write`)
 ↓
-Frontend Markdown Parsing (`marked`)
+Browser
 ↓
-Syntax Highlighting (`highlight.js`)
+Next Chunk
 ↓
-HTML
-↓
-Rendered UI
+Response Ends
+

@@ -2,6 +2,13 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v0.5.0: Streaming Responses (Backend)
+Learned:
+* Using `generateContentStream` to process AI responses in real-time.
+* Node.js HTTP response objects are Writable Streams, allowing raw data forwarding using `res.write()`.
+* Handling asynchronous iterators (`for await...of`) in JavaScript.
+* Graceful error handling in Express when HTTP headers have already been sent to the client (`res.headersSent`).
+
 ## v0.4.0: Modern Chat UI
 Learned:
 * Modern UI design principles (spacing, typography, color palettes).
