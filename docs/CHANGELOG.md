@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Switched from buffering the full AI response in memory to immediately streaming chunks.
 - Improved backend error handling for partially sent responses.
+- Hardened backend streaming route with prompt validation, `Cache-Control` headers, and full stack trace logging.
 
 
 ## [v0.4.0] - 2026-07-18

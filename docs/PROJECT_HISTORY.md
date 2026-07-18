@@ -9,9 +9,10 @@ This file serves as a complete development journal for the project. New features
 **Problem Statement:** The previous implementation buffered the entire AI response before sending it to the client, leading to long loading times.
 **What Was Implemented:**
 * Replaced `generateContent` with `generateContentStream` from the Gemini SDK.
-* Implemented HTTP chunked transfer encoding (`Transfer-Encoding: chunked`).
+* Implemented HTTP chunked transfer encoding (managed automatically by Node.js).
 * Streamed text chunks to the Express response stream using `res.write()`.
 * Added robust error handling to safely close the stream if an error occurs mid-generation.
+* Added input validation, `Cache-Control: no-cache` headers, and full stack-trace logging for production readiness.
 **Internal Working:** The `/google/chat` Express route now iterates over the async stream returned by Gemini. For each chunk received, the text is immediately forwarded to the client. The response is explicitly closed with `res.end()` once generation completes.
 **Architecture Decisions:** Opted for simple HTTP chunked transfer for this step to keep the integration lightweight, laying the groundwork for full SSE (Server-Sent Events) or raw stream processing on the frontend later.
 **Libraries Used:** Express, @google/generative-ai

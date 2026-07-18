@@ -13,18 +13,29 @@ router.post('/chat', async (req, res) => {
     try {
         const { prompt } = req.body;
 
-        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-        res.setHeader('Transfer-Encoding', 'chunked');
+        if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: "A valid 'prompt' string is required."
+            });
+        }
 
-        const result = await model.generateContentStream(prompt);
+        res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-cache');
+
+        const result = await model.generateContentStream(prompt.trim());
 
         for await (const chunk of result.stream) {
-            res.write(chunk.text());
+            const text = chunk.text();
+            if (text) {
+                res.write(text);
+            }
         }
 
         res.end();
     } catch (error) {
-        console.error("Error in /google/chat route: ", error.message);
+        console.error("Error in /google/chat route:");
+        console.error(error.stack);
 
         if (!res.headersSent) {
             res.status(500).json({
