@@ -2,6 +2,28 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v6.0.0
+**Date:** 2026-07-18
+**Feature Name:** Animated Typing Indicator (Feature 6)
+**Objective:** Add a responsive, polished typing indicator that appears while waiting for the first token of a streaming AI response to arrive.
+**Problem Statement:** Before this feature, a static "Thinking..." text appeared, which looked unpolished. The typing indicator should emulate modern messaging apps and vanish exactly when the stream begins or aborts.
+**What Was Implemented:**
+* **Bouncing Dot Animation:** Replaced the static "Thinking..." text with a smooth CSS-driven keyframe animation (`typingBounce`) on three inline dots.
+* **Stream Lifecycle Integration:** Wired the typing indicator into the `streamChatResponse` cycle. It renders instantly upon `fetch`, and is explicitly destroyed via `loading.remove()` the moment the `ReadableStream` yields its first chunk, or if an `AbortError` or network error triggers.
+* **Redundancy Cleanup:** Refactored `sendMessage` and `streamChatResponse` to prevent duplicate loading elements from spawning simultaneously.
+* **Accessibility:** Bound `aria-live="polite"` and `role="status"` to the typing element with an explicit `aria-label` ("Assistant is typing").
+**Internal Working:** The UI mounts a transient `.typing-indicator` DOM node. When the `TextDecoder` decodes the first non-empty byte of the `ReadableStream`, `aiResponseDiv` is lazily mounted, and the `loading` node is explicitly detached from its parent.
+**Architecture Decisions:** Kept the animation purely in CSS using `animation-delay` rather than JS intervals to guarantee lightweight execution that won't compete with the streaming processing thread.
+**Libraries Used:** Vanilla JS, CSS.
+**Folder/File Changes:** Modified `public/js/script.js` and `public/css/style.css`.
+**Challenges Faced:** Ensuring the indicator didn't leak if the user rapidly mashed the stop button before the stream connected.
+**Solutions:** The existing `AbortController` catch-block handles this gracefully, and I added a defensive `if (loading && loading.parentNode) loading.remove();` to guarantee cleanup in the error and abort pipelines.
+**Lessons Learned:** Pure CSS animations with negative `animation-delay` provide incredibly cheap, native-feeling stagger effects without touching JavaScript.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Persistent Backend Storage or Authentication.
+
+---
+
 ### Version v5.3.0
 **Date:** 2026-07-18
 **Feature Name:** Search UX Improvements (PR 5.4)

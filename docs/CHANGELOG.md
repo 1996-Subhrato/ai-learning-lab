@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v6.0.0] - 2026-07-18
+### Added
+- **Animated Typing Indicator:** Replaced the static "Thinking..." text with a sleek, animated bouncing-dots indicator that appears seamlessly while waiting for the AI response.
+- **Improved Stream Cleanup:** The typing indicator now instantly disappears the exact millisecond the first word is streamed, or if generation is halted.
+- **Accessibility:** Added ARIA labels and live region attributes to the typing indicator for screen readers.
+
+
 ## [v5.3.0] - 2026-07-18
 ### Added
 - **Search Result Count:** The sidebar now displays the exact number of matching chats when a search is active.

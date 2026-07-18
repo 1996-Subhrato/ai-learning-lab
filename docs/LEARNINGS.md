@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v6.0.0: Animated Typing Indicator
+Learned:
+* **CSS Staggered Animations:** Using a single `@keyframes` block and applying negative `animation-delay` values (`-0.32s`, `-0.16s`) to sibling elements creates a perfectly synchronized wave effect immediately on load, without any JavaScript timing overhead.
+* **Transient DOM Elements:** Elements that exist solely during asynchronous wait periods (like loading indicators) must be deterministically cleaned up in both the success *and* the `catch/finally` blocks to prevent DOM leaks during aborts or network failures.
+
 ## v5.3.0: Search UX Improvements
 Learned:
 * **DOM State Preservation:** When completely rewriting a container's `innerHTML`, transient state like `scrollTop` is lost. Caching `element.scrollTop` synchronously before the wipe and restoring it immediately after the repaint is a simple, highly effective way to prevent scroll-jumping in lists.

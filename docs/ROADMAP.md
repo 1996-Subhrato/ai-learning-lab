@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Completed
+* [x] v6.0.0 - Phase 6: Animated Typing Indicator
 * [x] v5.3.0 - Phase 5: Search UX Improvements
 * [x] v5.2.0 - Phase 5: Search Sidebar Integration
 * [x] v5.1.0 - Phase 5: Search Filter Helper

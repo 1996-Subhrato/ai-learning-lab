@@ -742,7 +742,7 @@ function renderCurrentConversation() {
     messages.scrollTop = messages.scrollHeight;
 }
 
-function createLoadingMessage() {
+function createTypingIndicator() {
     const loadingWrapper = document.createElement("div");
     
     const messageDiv = document.createElement("div");
@@ -752,11 +752,15 @@ function createLoadingMessage() {
     aiLabel.className = "ai";
     aiLabel.textContent = "AI";
     
-    const p = document.createElement("p");
-    p.textContent = "Thinking...";
+    const typingContainer = document.createElement("div");
+    typingContainer.className = "typing-indicator";
+    typingContainer.setAttribute("aria-live", "polite");
+    typingContainer.setAttribute("role", "status");
+    typingContainer.setAttribute("aria-label", "Assistant is typing");
+    typingContainer.innerHTML = '<span></span><span></span><span></span>';
     
     messageDiv.appendChild(aiLabel);
-    messageDiv.appendChild(p);
+    messageDiv.appendChild(typingContainer);
     loadingWrapper.appendChild(messageDiv);
     
     messages.appendChild(loadingWrapper);
@@ -783,9 +787,6 @@ async function sendMessage() {
     createUserMessage(text);
 
     prompt.value = "";
-    messages.scrollTop = messages.scrollHeight;
-
-    const loading = createLoadingMessage();
     messages.scrollTop = messages.scrollHeight;
 
     const payloadMessages = buildConversationPayload();
@@ -822,7 +823,7 @@ async function streamChatResponse(payloadMessages, isRegenerate = false) {
     let loading = null;
     
     try {
-        loading = createLoadingMessage();
+        loading = createTypingIndicator();
         messages.scrollTop = messages.scrollHeight;
 
         const response = await fetch("/google/chat", {
