@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Completed
+* [x] v7.1.0 - Phase 7: Database Layer Abstraction (PR 3.2)
+* [x] v7.0.0 - Phase 7: PostgreSQL Connection (PR 3.1)
 * [x] v6.0.0 - Phase 6: Animated Typing Indicator
 * [x] v5.3.0 - Phase 5: Search UX Improvements
 * [x] v5.2.0 - Phase 5: Search Sidebar Integration
@@ -44,7 +46,7 @@
 ## In Progress
 
 ## Planned
-* [ ] Persistent Storage (MongoDB)
+* [ ] Persistent Storage Implementation (Tables, Routes, Logic)
 * Multiple Chats
 * Authentication
 * MongoDB

@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v7.1.0] - 2026-07-18
+### Added
+- **Database Abstraction Layer:** Refactored `config/db.js` into a reusable database module exposing generic `query()` and `getClient()` methods instead of the raw PostgreSQL pool.
+- **Centralized Database Error Handling:** Added standardized `try/catch` wrapping and error logging within the database layer to ensure unhandled promise rejections are avoided and errors are consistently bubbled up to the caller.
+### Changed
+- **Server Initialization:** Updated `server.js` to utilize the new abstracted `db.query()` method instead of calling the raw pool directly.
+
+## [v7.0.1] - 2026-07-18
+### Fixed
+- **PostgreSQL Connection String:** Fixed a malformed Supabase database connection string in `.env` by removing the bracket syntax around the password field, allowing the application to correctly authenticate with the database on startup.
+
+## [v7.0.0] - 2026-07-18
+### Added
+- **PostgreSQL Infrastructure:** Added the `pg` database driver and configured a reusable connection pool (`config/db.js`).
+- **Fail-Fast Server Startup:** The server now verifies database connectivity via `SELECT NOW()` before starting. It will gracefully exit if the database is unreachable.
+### Changed
+- **Server Topology:** Renamed the entry point from `app.js` to `server.js` to reflect backend standards.
+
+
 ## [v6.0.0] - 2026-07-18
 ### Added
 - **Animated Typing Indicator:** Replaced the static "Thinking..." text with a sleek, animated bouncing-dots indicator that appears seamlessly while waiting for the AI response.

@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v7.0.0: PostgreSQL Connection
+Learned:
+* **Fail-Fast Methodology:** When building backend services, it is much safer for an application to crash immediately on startup if a core dependency (like the database) is missing, rather than starting successfully and throwing 500 errors to users later. Wrapping initialization in a top-level `async/await` block makes this straightforward.
+
 ## v6.0.0: Animated Typing Indicator
 Learned:
 * **CSS Staggered Animations:** Using a single `@keyframes` block and applying negative `animation-delay` values (`-0.32s`, `-0.16s`) to sibling elements creates a perfectly synchronized wave effect immediately on load, without any JavaScript timing overhead.

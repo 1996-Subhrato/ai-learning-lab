@@ -2,6 +2,67 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v7.1.0
+**Date:** 2026-07-18
+**Feature Name:** Database Layer Abstraction (PR 3.2)
+**Objective:** Create a reusable database layer to modularize PostgreSQL communication and keep future repositories decoupled from the raw `pg` pool.
+**Problem Statement:** Following the database connection in PR 3.1, passing around the raw `Pool` object would lead to duplicate error handling logic and tight coupling across the application. We needed an abstraction.
+**What Was Implemented:**
+* **Reusable DB Wrapper:** Refactored `config/db.js` to export a module containing `query()` and `getClient()` helper methods rather than exporting the raw `pool` instance.
+* **Centralized Error Handling:** Integrated `try/catch` blocks inside the database helper methods to ensure any SQL execution errors are automatically logged uniformly and then bubbled up (`throw error`) to the calling layer.
+* **Server Update:** Updated `server.js` to use `db.query()` instead of `pool.query()`.
+**Internal Working:** The module closes over the instantiated `Pool` and provides functional wrappers. Any call to `db.query()` internally invokes `pool.query()` but automatically handles the `catch` branch logging before throwing.
+**Architecture Decisions:** Adopted the Module Pattern to conceal the actual database driver instance (Encapsulation). This allows us to theoretically swap out the driver later without rewriting the rest of the application, and prepares the backend for the Repository Pattern.
+**Libraries Used:** Vanilla JS, `pg`.
+**Folder/File Changes:** Modified `config/db.js` and `server.js`.
+**Challenges Faced:** None.
+**Solutions:** N/A.
+**Lessons Learned:** Centralized abstraction layers prevent widespread code duplication and enforce consistent error reporting rules across the entire application before those errors become problems.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implementing actual Database Tables (SQL) and building Repositories for Chats/Messages.
+
+---
+
+### Version v7.0.1
+**Date:** 2026-07-18
+**Feature Name:** PostgreSQL Connection Fix
+**Objective:** Resolve the database authentication failure during server startup.
+**Problem Statement:** The server was failing to connect to the Supabase PostgreSQL database with a `password authentication failed` error, causing the `nodemon` process to crash.
+**What Was Implemented:**
+* **.env Correction:** Removed the literal bracket `[` and `]` characters from the `DATABASE_URL` password section, which were incorrectly copied from the Supabase connection template.
+**Internal Working:** The `server.js` startup function `startServer()` relies on the `pg` pool which automatically parses the `DATABASE_URL`. Fixing the string allows the `SELECT NOW()` heartbeat query to succeed.
+**Architecture Decisions:** No architectural changes; simple configuration fix.
+**Libraries Used:** N/A.
+**Folder/File Changes:** Modified `.env`.
+**Challenges Faced:** Identifying the syntax error in the connection string.
+**Solutions:** Inspected the terminal logs and `.env` file to spot the bracket issue.
+**Lessons Learned:** Always double-check connection string templates when copying from cloud providers like Supabase; placeholders like `[YOUR-PASSWORD]` mean replace the entire placeholder including brackets.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Continue with persistent storage implementation.
+
+---
+
+### Version v7.0.0
+**Date:** 2026-07-18
+**Feature Name:** PostgreSQL Connection (PR 3.1)
+**Objective:** Establish a robust PostgreSQL database connection on server startup to pave the way for persistent backend storage.
+**Problem Statement:** Up until this phase, chat states have only been persisted in the browser's `LocalStorage`. For true cross-device continuity and robustness, the application needs a real backend database. The first step is securely connecting to PostgreSQL.
+**What Was Implemented:**
+* **`pg` Driver Integration:** Installed the official Node.js PostgreSQL driver (`pg`).
+* **Connection Pool Configuration:** Created a dedicated `config/db.js` module that initializes a connection pool using a `DATABASE_URL` environment variable.
+* **Startup Verification:** Refactored the entry point (renamed from `app.js` to `server.js` to match standard backend topology) to aggressively verify the database connection with a `SELECT NOW()` query before binding to the HTTP port. If the database is unreachable, the application elegantly crashes (`process.exit(1)`) rather than running in an invalid state.
+**Internal Working:** The server utilizes an `async function startServer()` pattern. It awaits the database heartbeat. Upon success, it fires up Express. On `catch(error)`, it logs the error clearly and aborts execution.
+**Architecture Decisions:** Adopted a "fail-fast" topology. The server refuses to start unless the critical infrastructure (database) is alive. Abstracted the pool instance into a singleton `config/db.js` module so future repositories can import it natively.
+**Libraries Used:** `pg`, `dotenv`.
+**Folder/File Changes:** Created `config/db.js`, modified `.env`, renamed `app.js` to `server.js`, updated `package.json`.
+**Challenges Faced:** Ensuring the application doesn't hang on unhandled promise rejections if the URL is invalid.
+**Solutions:** Explicitly wrapped the initialization in a robust `try/catch` block.
+**Lessons Learned:** Validating critical infrastructure dependencies before opening HTTP ports prevents "zombie" servers that appear healthy to load balancers but fail on data requests.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Implement database migrations, schema definitions, and replace LocalStorage with API calls.
+
+---
+
 ### Version v6.0.0
 **Date:** 2026-07-18
 **Feature Name:** Animated Typing Indicator (Feature 6)

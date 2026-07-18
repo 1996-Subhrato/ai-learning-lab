@@ -1,9 +1,9 @@
 require('dotenv').config();
 
 const express = require('express');
-const OpenAI = require('openai');
 const morgan = require('morgan');
 const path = require("path");
+const db = require('./config/db');
 
 const app = express();
 
@@ -33,6 +33,27 @@ app.use('/openai', openAIRoutes);
 // =======================================
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
-    console.log(`Server is running, http://localhost:${port}`);
-})
+
+async function startServer() {
+    console.log("Starting server...");
+    console.log("Connecting to PostgreSQL...");
+
+    try {
+        if (!process.env.DATABASE_URL) {
+            throw new Error("DATABASE_URL is missing in environment variables.");
+        }
+
+        await db.query('SELECT NOW()');
+        console.log("✅ PostgreSQL connected successfully");
+
+        app.listen(port, () => {
+            console.log(`Server running on port ${port}`);
+        });
+    } catch (error) {
+        console.error("❌ PostgreSQL connection failed");
+        console.error(error.message);
+        process.exit(1);
+    }
+}
+
+startServer();
