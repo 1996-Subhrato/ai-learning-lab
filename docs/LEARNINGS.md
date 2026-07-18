@@ -2,6 +2,10 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v5.2.0: Search Sidebar Integration
+Learned:
+* **Derived State Rendering:** By computing the filtered array *inside* the render function rather than mutating global variables, the application remains highly resilient to state synchronization bugs. The core data remains pristine, and the UI simply reflects a computed projection of it.
+
 ## v5.1.0: Search Filter Helper
 Learned:
 * **Pure Functions:** Decoupling logic into pure functions (`filterChats`) prevents state mutation bugs. If the function is guaranteed to return a new array and not touch the global `chatSessions`, it's infinitely safer to wire into aggressive UI events like `onInput`.

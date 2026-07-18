@@ -235,6 +235,14 @@ body {
     color: var(--text-secondary);
 }
 
+.empty-search-state {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
 .clear-search-btn {
     position: absolute;
     right: 12px;

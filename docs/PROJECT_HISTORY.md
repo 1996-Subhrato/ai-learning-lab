@@ -2,6 +2,27 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v5.2.0
+**Date:** 2026-07-18
+**Feature Name:** Search Sidebar Integration (PR 5.3)
+**Objective:** Connect the Search UI input to the DOM rendering engine, enabling real-time filtering of the chat sidebar without mutating application state.
+**Problem Statement:** Searching chats should be immediate and non-destructive. Modifying the global array would break the active chat selection or permanently delete un-rendered chats from local storage during a subsequent save operation.
+**What Was Implemented:**
+* Refactored `renderSidebar()` in `script.js` to derive its rendering source dynamically by calling `filterChats(chatSessions, chatSearchInput.value)`.
+* Appended `renderSidebar()` to the `input` and `click` event listeners on the search input and clear buttons.
+* Engineered a clean empty state (`<div class="empty-search-state">No chats found.</div>`) that displays when the filter returns zero results.
+**Internal Working:** When a user types, the DOM fires an `"input"` event. This triggers a targeted `renderSidebar()` execution, which calculates the subset of visible chats, wipes the `historyList` container, and repopulates it. The core `chatSessions` array, `currentChatId`, and the right-hand conversation viewport remain untouched.
+**Architecture Decisions:** Opted for a "Derived State Rendering" pattern. By computing the filtered list inside the render function rather than maintaining a separate `filteredChats` global variable, we eliminate entire classes of state-sync bugs.
+**Libraries Used:** Vanilla JS, CSS.
+**Folder/File Changes:** Modified `public/js/script.js` and `public/css/style.css`.
+**Challenges Faced:** Preventing the active chat from de-selecting if it's hidden by a search filter.
+**Solutions:** Because the core state (`currentChatId`) is never touched during filtering, the active chat seamlessly persists in memory. Clicking a visible chat securely jumps the active pointer while the filter query remains active.
+**Lessons Learned:** Re-rendering a specific section of the DOM (the sidebar) based on a derived calculation of the global state is highly performant and incredibly safe compared to managing multi-layered application states.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Persistent backend storage for deleted items.
+
+---
+
 ### Version v5.1.0
 **Date:** 2026-07-18
 **Feature Name:** Search Filter Helper (PR 5.2)

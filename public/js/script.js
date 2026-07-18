@@ -302,12 +302,14 @@ chatSearchInput.addEventListener("input", () => {
     } else {
         clearSearchBtn.style.display = "none";
     }
+    renderSidebar();
 });
 
 clearSearchBtn.addEventListener("click", () => {
     chatSearchInput.value = "";
     clearSearchBtn.style.display = "none";
     chatSearchInput.focus();
+    renderSidebar();
 });
 
 cancelDeleteBtn.addEventListener("click", closeDeleteModal);
@@ -490,7 +492,15 @@ function renderSidebar() {
     
     historyList.innerHTML = "";
     
-    for (const chat of chatSessions) {
+    const query = chatSearchInput.value;
+    const visibleChats = filterChats(chatSessions, query);
+    
+    if (visibleChats.length === 0) {
+        historyList.innerHTML = `<div class="empty-search-state">No chats found.</div>`;
+        return;
+    }
+    
+    for (const chat of visibleChats) {
         const item = createSidebarItem(chat);
         historyList.appendChild(item);
     }
