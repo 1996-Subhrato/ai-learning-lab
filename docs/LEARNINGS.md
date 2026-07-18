@@ -2,6 +2,12 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v0.7.0: Conversation Memory
+Learned:
+* LLMs (Large Language Models) are naturally stateless. Providing a memory feature requires explicitly re-submitting the entire previous dialogue string/array on every new turn.
+* How to format generic `role`/`content` schemas into provider-specific schemas (e.g., mapping `assistant` to Gemini's `model` role).
+* Ensuring states remain synchronized between UI rendering (streaming) and memory (committing to the array only upon completion).
+
 ## v0.6.0: Streaming Responses (Frontend)
 Learned:
 * The native Fetch API exposes `response.body.getReader()`, which returns a `ReadableStreamDefaultReader` for chunk-by-chunk processing.

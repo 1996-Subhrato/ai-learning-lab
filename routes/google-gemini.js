@@ -11,19 +11,50 @@ const model = genAI.getGenerativeModel({
 
 router.post('/chat', async (req, res) => {
     try {
-        const { prompt } = req.body;
+        const { messages } = req.body;
 
-        if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
+        if (!Array.isArray(messages) || messages.length === 0) {
             return res.status(400).json({
                 success: false,
-                message: "A valid 'prompt' string is required."
+                message: "A valid 'messages' array is required."
             });
+        }
+
+        for (const msg of messages) {
+            if (msg.role !== 'user' && msg.role !== 'assistant') {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid role. Only 'user' and 'assistant' are permitted."
+                });
+            }
+
+            if (typeof msg.content !== 'string') {
+                return res.status(400).json({
+                    success: false,
+                    message: "Message content must be a string."
+                });
+            }
+
+            const trimmedContent = msg.content.trim();
+            if (!trimmedContent) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Message content cannot be empty."
+                });
+            }
+
+            msg.content = trimmedContent;
         }
 
         res.setHeader('Content-Type', 'text/plain; charset=utf-8');
         res.setHeader('Cache-Control', 'no-cache');
 
-        const result = await model.generateContentStream(prompt.trim());
+        const contents = messages.map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+        }));
+
+        const result = await model.generateContentStream({ contents });
 
         for await (const chunk of result.stream) {
             const text = chunk.text();

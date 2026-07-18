@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.7.0] - 2026-07-18
+### Added
+- In-memory conversation history (`conversationHistory` array) on the frontend.
+- Multi-turn context support for the Gemini API backend route.
+
+### Changed
+- Switched the `/chat` route payload from a single `prompt` string to a `messages` array.
+- The Gemini SDK now receives full conversation context via the `contents` property instead of a single prompt string.
+
+
 ## [v0.6.0] - 2026-07-18
 ### Added
 - Native frontend stream consumption using Fetch API's `ReadableStream`.

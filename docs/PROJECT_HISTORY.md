@@ -2,6 +2,30 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v0.7.0
+**Date:** 2026-07-18
+**Feature Name:** Conversation Memory (In-Memory Context)
+**Objective:** Maintain multi-turn conversation context so the AI can remember previous messages during a session.
+**Problem Statement:** The AI treated every prompt as an isolated event, lacking the ability to follow up on previous context or maintain a cohesive dialogue.
+**What Was Implemented:**
+* Instantiated an in-memory `conversationHistory` array on the frontend to track all user and assistant messages chronologically.
+* Updated the POST `/chat` payload to send the complete `messages` array instead of a single `prompt`.
+* Appended the AI's final accumulated response to the array only after the streaming successfully completes.
+* Modified the Express route to validate the `messages` array structure.
+* Mapped the `messages` array into the precise `{ role, parts }` object structure required by the `@google/generative-ai` SDK.
+* Replaced the `generateContentStream(prompt)` call with `generateContentStream({ contents: ... })` to feed the entire history into Gemini.
+**Internal Working:** When the user hits send, their message is immediately pushed to the frontend history array. The entire array is serialized and POSTed to the backend. The backend maps the "assistant" roles to "model", validates the data, and invokes the Gemini streaming API with the full multi-turn context. The stream is sent back. Upon successful completion, the frontend pushes the accumulated AI response to the history array.
+**Architecture Decisions:** Stored the history strictly in JavaScript memory variables. No LocalStorage, SessionStorage, or database was used to keep the implementation purely stateless across refreshes as per requirements.
+**Libraries Used:** Vanilla JS, Express, `@google/generative-ai`
+**Folder/File Changes:** Modified `public/js/script.js` and `routes/google-gemini.js`.
+**Challenges Faced:** Safely appending the assistant's response to the history array only when streaming completes successfully to avoid corrupting the memory with partial or failed responses.
+**Solutions:** Placed the `conversationHistory.push()` operation strictly at the end of the `try` block, after flushing the final decoder bytes.
+**Lessons Learned:** Formatting multi-turn data for the Gemini SDK (`generateContentStream` accepts an array of content parts rather than requiring the explicit `startChat` class wrapper).
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Support for multiple distinct chats or persistent storage.
+
+---
+
 ### Version v0.6.0
 **Date:** 2026-07-18
 **Feature Name:** Frontend Streaming Responses (Step 2)

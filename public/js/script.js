@@ -2,7 +2,20 @@ const btn = document.getElementById("sendBtn");
 const prompt = document.getElementById("prompt");
 const messages = document.getElementById("messages");
 
+const conversationHistory = [];
+
 btn.addEventListener("click", sendMessage);
+
+function createAiMessage() {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message";
+    messageDiv.innerHTML = `
+        <div class="ai">AI</div>
+        <div class="ai-response"></div>
+    `;
+    messages.appendChild(messageDiv);
+    return messageDiv.querySelector(".ai-response");
+}
 
 async function sendMessage() {
     if (btn.disabled) return;
@@ -12,12 +25,24 @@ async function sendMessage() {
 
     btn.disabled = true;
 
-    messages.insertAdjacentHTML('beforeend', `
-        <div class="message">
-            <div class="user">You</div>
-            <p>${text}</p>
-        </div>
-    `);
+    conversationHistory.push({
+        role: "user",
+        content: text
+    });
+
+    const userMessageDiv = document.createElement("div");
+    userMessageDiv.className = "message";
+    
+    const userLabel = document.createElement("div");
+    userLabel.className = "user";
+    userLabel.textContent = "You";
+    
+    const userText = document.createElement("p");
+    userText.textContent = text; // Safe from XSS
+    
+    userMessageDiv.appendChild(userLabel);
+    userMessageDiv.appendChild(userText);
+    messages.appendChild(userMessageDiv);
 
     prompt.value = "";
     messages.scrollTop = messages.scrollHeight;
@@ -38,11 +63,15 @@ async function sendMessage() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ prompt: text })
+            body: JSON.stringify({ messages: conversationHistory })
         });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        if (!response.body) {
+            throw new Error("ReadableStream not supported or response body is missing.");
         }
 
         const reader = response.body.getReader();
@@ -63,17 +92,7 @@ async function sendMessage() {
 
             if (!aiResponseDiv) {
                 loading.remove();
-                
-                const messageDiv = document.createElement("div");
-                messageDiv.className = "message";
-                messageDiv.innerHTML = `
-                    <div class="ai">AI</div>
-                    <div class="ai-response"></div>
-                `;
-                messages.appendChild(messageDiv);
-                
-                // Store direct reference to the newly created DOM node
-                aiResponseDiv = messageDiv.querySelector(".ai-response");
+                aiResponseDiv = createAiMessage();
             }
 
             const html = marked.parse(accumulatedText);
@@ -86,20 +105,12 @@ async function sendMessage() {
             messages.scrollTop = messages.scrollHeight;
         }
 
-        // Flush remaining decoder bytes
         const finalChunk = decoder.decode();
         if (finalChunk) {
             accumulatedText += finalChunk;
             if (!aiResponseDiv) {
                 loading.remove();
-                const messageDiv = document.createElement("div");
-                messageDiv.className = "message";
-                messageDiv.innerHTML = `
-                    <div class="ai">AI</div>
-                    <div class="ai-response"></div>
-                `;
-                messages.appendChild(messageDiv);
-                aiResponseDiv = messageDiv.querySelector(".ai-response");
+                aiResponseDiv = createAiMessage();
             }
             
             const html = marked.parse(accumulatedText);
@@ -110,23 +121,27 @@ async function sendMessage() {
             messages.scrollTop = messages.scrollHeight;
         }
 
-        // Failsafe to remove loading if response was completely empty
         if (loading.parentNode) {
             loading.remove();
+        }
+
+        if (accumulatedText) {
+            conversationHistory.push({
+                role: "assistant",
+                content: accumulatedText
+            });
         }
 
     } catch (error) {
         console.error("Streaming error:", error);
         if (loading.parentNode) loading.remove();
         
-        messages.insertAdjacentHTML('beforeend', `
-            <div class="message">
-                <div class="ai">AI</div>
-                <div class="ai-response" style="color: red;">
-                    Error: Streaming failed. Please try again.
-                </div>
-            </div>
-        `);
+        conversationHistory.pop(); // Rollback user message
+        
+        const errorResponseDiv = createAiMessage();
+        errorResponseDiv.className = "ai-response ai-error";
+        errorResponseDiv.textContent = "Error: Streaming failed. Please try again.";
+        
         messages.scrollTop = messages.scrollHeight;
     } finally {
         btn.disabled = false;

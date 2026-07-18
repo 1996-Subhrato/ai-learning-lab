@@ -434,6 +434,11 @@ body {
     font-weight: 600;
 }
 
+.ai-error {
+    color: #ff6b6b; /* Red error color */
+    font-weight: 500;
+}
+
 /* Code Blocks */
 .ai-response code {
     background: var(--bg-card);
