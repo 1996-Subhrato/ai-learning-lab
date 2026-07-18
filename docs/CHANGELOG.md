@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.0] - 2026-07-18
+### Added
+- "Copy AI Response" button natively integrated into completed assistant messages.
+- Accessible, transient button states ("Copy" -> "Copied" -> "Copy") providing immediate user feedback.
+- Strict clipboard logic utilizing `navigator.clipboard.writeText()` to ensure pristine Markdown formatting is retained without bleeding DOM artifacts.
+
+
 ## [v1.1.1] - 2026-07-18
 ### Changed
 - Abstracted the chat title prompt into a dedicated module (`prompts/generateChatTitlePrompt.js`).

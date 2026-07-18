@@ -227,12 +227,65 @@ function createUserMessage(text) {
     return userMessageDiv;
 }
 
+function renderCopyButtonDefaultState(button) {
+    button.innerHTML = `<i data-lucide="copy"></i> Copy`;
+    if (window.lucide) {
+        lucide.createIcons({ root: button });
+    }
+}
+
+function renderCopyButton(container, messageText) {
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.setAttribute("aria-label", "Copy response");
+    renderCopyButtonDefaultState(copyBtn);
+    
+    copyBtn.addEventListener("click", async () => {
+        if (copyBtn.disabled) return;
+        
+        const success = await copyText(messageText);
+        if (success) {
+            showCopySuccess(copyBtn);
+        }
+    });
+    
+    container.appendChild(copyBtn);
+}
+
+async function copyText(text) {
+    if (!text) return false;
+    try {
+        await navigator.clipboard.writeText(text);
+        return true;
+    } catch (err) {
+        console.error("Failed to copy text: ", err);
+        return false;
+    }
+}
+
+function showCopySuccess(button) {
+    button.disabled = true;
+    button.innerHTML = `<i data-lucide="check"></i> Copied`;
+    if (window.lucide) {
+        lucide.createIcons({ root: button });
+    }
+    
+    setTimeout(() => {
+        renderCopyButtonDefaultState(button);
+        button.disabled = false;
+    }, 2000);
+}
+
 function renderMessage(msg) {
     if (msg.role === 'user') {
         createUserMessage(msg.content);
     } else if (msg.role === 'assistant') {
         const aiResponseDiv = createAiMessage();
         renderMarkdown(aiResponseDiv, msg.content);
+        
+        if (msg.complete && msg.content) {
+            renderCopyButton(aiResponseDiv.parentNode, msg.content);
+        }
     }
 }
 
@@ -359,6 +412,10 @@ async function sendMessage() {
                 content: accumulatedText,
                 complete: true
             });
+            
+            if (aiResponseDiv && aiResponseDiv.parentNode) {
+                renderCopyButton(aiResponseDiv.parentNode, accumulatedText);
+            }
             
             const currentChat = getCurrentChat();
             if (shouldGenerateTitle(currentChat)) {

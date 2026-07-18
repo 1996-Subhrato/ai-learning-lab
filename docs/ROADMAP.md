@@ -1,6 +1,8 @@
 # Roadmap
 
 ## Completed
+* [x] v1.2.0 - Copy AI Response
+* [x] v1.1.1 - AI Title Generation Backend Refactor
 * [x] v1.1.0 - Chat Sessions Architecture (Step 3 - AI Generated Titles)
 * [x] v1.0.1 - Functional Sidebar Architecture Refactor
 * [x] v1.0.0 - Chat Sessions Architecture (Step 2 - Sidebar UI)

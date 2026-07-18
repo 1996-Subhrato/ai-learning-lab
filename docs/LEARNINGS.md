@@ -2,6 +2,11 @@
 
 This file documents concepts learned while implementing features for this project.
 
+## v1.2.0: Copy AI Response
+Learned:
+* **Closure Data Binding:** When attaching event listeners to dynamically generated UI elements (like a Copy button), passing the raw state string directly into the callback closure is significantly cleaner and more secure than reading `innerText` back out of the DOM tree.
+* **Transient UI States:** Providing immediate visual feedback (e.g., swapping an icon to a checkmark for 2 seconds) is a hallmark of premium UX design, transforming an invisible clipboard API call into a tangible user action.
+
 ## v1.1.1: AI Title Generation Backend Refactor
 Learned:
 * **LLM Output Sanitization:** You can never implicitly trust the output of an LLM, even when explicitly instructed (e.g., "no quotes"). Building a deterministic, regex-based sanitation utility is mandatory to prevent UI bugs caused by rogue formatting.

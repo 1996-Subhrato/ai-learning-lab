@@ -629,6 +629,33 @@ textarea::placeholder {
     text-align: center;
 }
 
+/* Copy Button */
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: color 0.2s ease;
+    align-self: flex-start;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.copy-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.copy-btn i {
+    width: 14px;
+    height: 14px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {

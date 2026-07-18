@@ -2,6 +2,27 @@
 
 This file serves as a complete development journal for the project. New features and updates are logged here.
 
+### Version v1.2.0
+**Date:** 2026-07-18
+**Feature Name:** Copy AI Response
+**Objective:** Add a "Copy" button to all completed AI responses, allowing users to effortlessly transfer the pure markdown response to their clipboard without selecting rendered HTML manually.
+**Problem Statement:** Users had to highlight and copy AI text manually, which often resulted in accidentally copying DOM metadata, icons, or malformed markdown depending on their browser highlighting behavior.
+**What Was Implemented:**
+* Built an encapsulated `renderCopyButton()` DOM generator to inject a subtle copy button beneath AI responses.
+* Added `copyResponse()`, `showCopySuccess()`, and `resetCopyButton()` logic to securely handle `navigator.clipboard.writeText` calls and temporarily toggle the button's UI state to a checkmark for user feedback.
+* Integrated the rendering conditionally: only `complete: true` AI messages receive the button.
+**Internal Working:** During historical `renderMessage()` loads, the button is stamped onto the DOM. During live streaming (`sendMessage()`), the button is intentionally withheld to prevent layout shifting. Once the stream successfully closes, the DOM is mutated a final time to append the copy button. Clicking the button initiates an async clipboard API call.
+**Architecture Decisions:** Maintaining a strict separation of concerns, the copy logic avoids re-rendering the conversation or parsing the DOM. By passing the raw string variable (`messageText`) directly from state into the button's closure during construction, we bypass the need to scrape text back out of the HTML.
+**Libraries Used:** Vanilla JS, Lucide.
+**Folder/File Changes:** Modified `public/css/style.css` and `public/js/script.js`.
+**Challenges Faced:** N/A
+**Solutions:** N/A.
+**Lessons Learned:** Storing raw data (like Markdown) in memory and passing it via closures to event listeners is infinitely safer than attempting to reverse-engineer clean text out of an already-rendered `innerHTML` block.
+**Screenshots Placeholder:** N/A
+**Next Improvements:** Persistent Storage (MongoDB).
+
+---
+
 ### Version v1.1.1
 **Date:** 2026-07-18
 **Feature Name:** AI Title Generation Backend Refactor
